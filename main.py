@@ -1,7 +1,6 @@
 # libraries
 import matplotlib.pyplot as plt
 import matplotlib.animation
-import curses
 import math
 from car import Car, calcTriangle
 
@@ -48,6 +47,8 @@ def iterate(i: int, *fargs):
             car1.move_xy(float(cmd[1]), float(cmd[2]))
         elif cmd[0] == "RAD":
             car1.move_rad(float(cmd[1]), float(cmd[2]))
+        elif cmd[0] == "DRAW":
+            pass
 
     car1.draw()
 

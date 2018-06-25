@@ -210,8 +210,15 @@ class Car:
             return
         self.state = self.move_xy
 
+
         # avoid division by zero
         angle = 360 if angle == 0 else angle
+        anglediff = (angle-self.angle+180) % 360 - 180
+
+        if anglediff == 0:
+            # finished
+            self.stop()
+            return
 
         # remember last velocity
         pVelocity = self.velocity
@@ -229,17 +236,16 @@ class Car:
             numIterAngle = angle / numIterMove
 
         self.state = self.stop
-        print(self.angle, angle % 360)
         # choose direction to rotate
-        if angle > 0:
+        if anglediff >= 0:
             # jump to angle if needed and check overshooting
-            if self.angle - numIterAngle > angle:
+            if anglediff < numIterAngle:
                 self.angle = angle
             else:
                 self.rotate(self.angle + numIterAngle)
         else:
             # jump to angle if needed and check overshooting
-            if (self.angle - numIterAngle) % 360 < angle % 360:
+            if abs(anglediff) < numIterAngle:
                 self.angle = angle % 360
             else:
                 self.rotate(self.angle - numIterAngle)
@@ -252,8 +258,10 @@ class Car:
         # reset back velocity to previous one
         self.setVelocity(pVelocity)
 
+        anglediff = (angle-self.angle+180) % 360 - 180        
+
         # return if desired angle was reached
-        if (self.angle == angle % 360 and angle < 0) or (self.angle == angle and angle < 360):
+        if anglediff == 0:
             # finished
             self.stop()
             return
