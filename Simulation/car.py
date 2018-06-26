@@ -76,7 +76,10 @@ class Car:
         self.patch = patch
 
         # car's current state
-        self.state = self.stop
+        self.state = None
+
+        # car's waiting time
+        self.interval = None
 
     # checks if you can change states
     # you change from stop to anything and from anything to stop
@@ -85,6 +88,11 @@ class Car:
         # if state is the same you can always change to youself or if first iteration
         if self.state == state or self.state == None:
             return True
+
+        # wait for correct time
+        if self.state == self.wait and self.interval == 0:
+            return True
+
         # if current state is stop and desired state is not stop
         if self.state == self.stop and state != self.stop:
             return True
@@ -92,6 +100,21 @@ class Car:
         # if current state is not stop and desired step is not stop
         if self.state != self.stop and self.state != self.stop:
             return False
+
+    # cars time to wait with no action
+    def wait(self, time: int):
+        self.interval = time
+        self.state = self.wait
+
+    # decrease the cars interval by one each frame
+    def decInterval(self):
+        if self.interval == 0:
+            self.stop()
+            self.interval = None
+            return
+        elif self.interval == None:
+            return
+        self.interval -= 1
 
     # apply changes for the car's patch for redrawing
     def draw(self):
@@ -121,7 +144,7 @@ class Car:
         else:
             self.stop()
 
-    # add to the midpoint
+    # add to the midpoint the sin and cos for x and y values
     def move(self):
         if self.stateChange(self.move) != True:
             return
@@ -208,8 +231,7 @@ class Car:
     def move_rad(self, rad: float, angle: float):
         if not self.stateChange(self.move_rad):
             return
-        self.state = self.move_xy
-
+        self.state = self.move_rad
 
         # avoid division by zero
         angle = 360 if angle == 0 else angle
@@ -258,7 +280,7 @@ class Car:
         # reset back velocity to previous one
         self.setVelocity(pVelocity)
 
-        anglediff = (angle-self.angle+180) % 360 - 180        
+        anglediff = (angle-self.angle+180) % 360 - 180
 
         # return if desired angle was reached
         if anglediff == 0:
@@ -274,6 +296,6 @@ class Car:
     def setVelocity(self, v: float):
         self.velocity = v
 
-    # change velocity to zero
+    # change state to stop so next command can be interpreted   
     def stop(self):
         self.state = self.stop
