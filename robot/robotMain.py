@@ -8,8 +8,13 @@ def main():
     mh = Adafruit_MotorHAT(addr=0x60)
 
     # create the car
-    car1 = Car(mh, 3, 4)
+    car1 = Car(mh, 4, 3)
 
+    print("motors are running!")
+    car1.setVelocity(255)
+    car1.move()
+    print("Car stopped!")
+    car1.stop()
 
 if __name__ == "__main__":
     main()
