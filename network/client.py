@@ -25,7 +25,7 @@ class Client():
         print(resp.read())
 
 def main():
-    connection = Client(HTTPConnection("127.0.0.1", 80))
+    connection = Client(HTTPConnection("169.254.1.234", 80))
     connection.sendPOST("GILDA IS POSTING SMTH")
 
 if __name__ == "__main__":

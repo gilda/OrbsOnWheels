@@ -35,7 +35,7 @@ class Server(BaseHTTPRequestHandler):
         return
 
 def main():
-    httpd = HTTPServer(("127.0.0.1", 80), Server)
+    httpd = HTTPServer(("0.0.0.0", 80), Server)
     httpd.serve_forever()
 
 if __name__ == "__main__":
