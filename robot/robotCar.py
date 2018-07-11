@@ -19,11 +19,11 @@ ANGULAR_VELOCITY = 5
 class Car:
     def __init__(self, mh, rMotor, lMotor):
         # car's current x position
-        self.x: float = 0
+        self.x = 0
         # car's current y position
-        self.y: float = 0
+        self.y = 0
         # car's current angle
-        self.angle: float = 0
+        self.angle = 0
 
         # car's current velocity
         self.velocity: float = 1
@@ -34,7 +34,7 @@ class Car:
 
         # car's state and waiting time
         self.state = None
-        self.interval: int = None
+        self.interval = None
     
     def stateChange(self, state):
         # can always change to current state
@@ -54,7 +54,7 @@ class Car:
             return False
 
     # car's time to wait with no action
-    def wait(self, time: int):
+    def wait(self, time):
         self.interval = time
         self.state = self.wait
 
@@ -75,7 +75,7 @@ class Car:
         #self.angle = getAngle
 
     # rotate the car to some desired angle
-    def rotate(self, angle: float):
+    def rotate(self, angle):
         if self.stateChange(self.rotate) != True:
             return
         self.state = self.rotate
@@ -115,7 +115,7 @@ class Car:
             self.stop()
 
     # set the car's current velocity
-    def setVelocity(self, v: float):
+    def setVelocity(self, v):
         self.velocity = v
         self.rMotor.setSpeed(int((v / WHEEL_LENGTH) * 255))
         self.lMotor.setSpeed(int((v / WHEEL_LENGTH) * 255))
@@ -149,11 +149,11 @@ class Car:
             self.stop()
 
     # move the car to some desired x y position [cm]
-    def move_xy(self, x: float, y: float):
+    def move_xy(self, x, y):
         pass
     
     # move the car in some rasius until some angle was achieved
-    def move_rad(self, rad: float, angle: float):
+    def move_rad(self, rad, angle):
         pass
 
     # indicate that the car is now stopping and stop it physically

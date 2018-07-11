@@ -9,7 +9,7 @@ ELONGATE = 1.2
 ANGULAR_VELOCITY = 10
 
 
-def calcTriangle(angle: int,  size: float, x: float = 0, y: float = 0):
+def calcTriangle(angle,  size, x = 0, y = 0):
     # x and y are the center of the triangle
     angle = angle - 90
     point1 = [0, 0]
@@ -60,19 +60,19 @@ def calcTriangle(angle: int,  size: float, x: float = 0, y: float = 0):
 
 
 class Car:
-    def __init__(self, ID: int, x: float, y: float, size: float):
+    def __init__(self, ID, x, y, size):
         self.id = ID
         
         # cars's current coordinates and angle
-        self.x: float = x
-        self.y: float = y
-        self.angle: float = 0
+        self.x = x
+        self.y = y
+        self.angle = 0
 
         # car's current size
-        self.size: float = size
+        self.size = size
 
         # car's velocity in units per second
-        self.velocity: float = 0
+        self.velocity = 0
 
         # car's current state
         self.state = None
@@ -101,7 +101,7 @@ class Car:
             return False
 
     # cars time to wait with no action
-    def wait(self, time: int):
+    def wait(self, time):
         self.interval = time
         self.state = self.wait
 
@@ -151,7 +151,7 @@ class Car:
         self.stop()
 
     # move to specific x, y
-    def move_xy(self, x: float, y: float):
+    def move_xy(self, x, y):
         # state cannot change
         if self.stateChange(self.move_xy) != True:
             return
@@ -223,7 +223,7 @@ class Car:
             self.state = self.move_xy
 
     # move the car in radius for a specified angle
-    def move_rad(self, rad: float, angle: float):
+    def move_rad(self, rad, angle):
         if not self.stateChange(self.move_rad):
             return
         self.state = self.move_rad
@@ -288,7 +288,7 @@ class Car:
             return
 
     # change the current velocity of the car
-    def setVelocity(self, v: float):
+    def setVelocity(self, v):
         self.velocity = v
 
     # change state to stop so next command can be interpreted   

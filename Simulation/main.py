@@ -17,7 +17,7 @@ cmd1 = ""
 cmd2 = ""
 
 
-def iterate(i: int, *fargs):
+def iterate(i, *fargs):
     # get patches for drawing
     car1 = fargs[0]
     car2 = fargs[1]
