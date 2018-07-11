@@ -125,9 +125,9 @@ def main():
     ax.axis([0, WINDOW_SIZE, 0, WINDOW_SIZE])
 
     # create car patches for drawing on plot
-    car1 = Car(0.5, 0.5, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
+    car1 = Car(0, 0.5, 0.5, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
                                                                     WINDOW_SIZE / 20), closed=True, facecolor="red"))
-    car2 = Car(0.4, 0.4, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
+    car2 = Car(1, 0.4, 0.4, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
                                                                     WINDOW_SIZE / 20), closed=True, facecolor="blue"))
 
     # add patches to the drawing
