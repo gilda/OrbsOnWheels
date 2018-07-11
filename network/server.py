@@ -1,6 +1,5 @@
 from http.server import *
 from car import *
-import matplotlib.pyplot as plt
 import json
 
 class Server(BaseHTTPRequestHandler):
@@ -57,7 +56,7 @@ def cartoJson(car):
                                 "y": car.y,
                                 "angle": car.angle}}, indent=4, sort_keys=True), "utf-8")
 
-cars = [Car(0, 0, 0, 0.1, plt.Polygon(calcTriangle(0, 0.1), closed=True, facecolor="red"))]
+cars = [Car(0, 0, 0, 0.1)]
 
 httpd = HTTPServer(("0.0.0.0", 80), Server)
 httpd.serve_forever()

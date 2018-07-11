@@ -60,7 +60,7 @@ def calcTriangle(angle: int,  size: float, x: float = 0, y: float = 0):
 
 
 class Car:
-    def __init__(self, ID: int, x: float, y: float, size: float, patch):
+    def __init__(self, ID: int, x: float, y: float, size: float):
         self.id = ID
         
         # cars's current coordinates and angle
@@ -73,9 +73,6 @@ class Car:
 
         # car's velocity in units per second
         self.velocity: float = 0
-
-        # car's patch for drawing ot on plot
-        self.patch = patch
 
         # car's current state
         self.state = None
@@ -117,10 +114,6 @@ class Car:
         elif self.interval == None:
             return
         self.interval -= 1
-
-    # apply changes for the car's patch for redrawing
-    def draw(self):
-        self.patch.set_xy(calcTriangle(self.angle, self.size, self.x, self.y))
 
     # rotate the car
     def rotate(self, angle: float):
