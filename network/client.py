@@ -6,18 +6,18 @@ class Client():
         self.conn = conn
 
     # sends get response to connection and prints the response 
-    def sendGet(self):
+    def sendGET(self, path):
         # send request
-        self.conn.request("GET", "/")
+        self.conn.request("GET", path)
         
         # get and print response
         resp = self.conn.getresponse()
         print(resp.status, resp.reason)
         print(resp.read())
 
-    def sendPOST(self, data):
+    def sendPOST(self, path, data):
         # send request
-        self.conn.request("POST", "/", data)
+        self.conn.request("POST", path, data)
 
         # get and print response
         resp = self.conn.getresponse()
@@ -25,8 +25,8 @@ class Client():
         print(resp.read())
 
 def main():
-    connection = Client(HTTPConnection("169.254.1.234", 80))
-    connection.sendPOST("GILDA IS POSTING SMTH")
+    connection = Client(HTTPConnection("127.0.0.1", 4590))
+    connection.sendGET("/gamePhase")
 
 if __name__ == "__main__":
     main()
