@@ -14,7 +14,8 @@ def main():
     print("rotating...")
 
     while car1.state != car1.stop:
-        car1.setVelocity((127 / 255)  * WHEEL_LENGTH)
+        car1.setVelocity(70)
+        car1.move()
         car1.move()
     
     print("Car stopped!")

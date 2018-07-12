@@ -8,13 +8,17 @@ ANGLE_TO_RAD = math.pi / 180
 RAD_TO_ANGLE = 180 / math.pi
 
 # motor's 100 percent throtle time to revolve around itself once [s]
-SPIN_TIME = 0.285
+SPIN_TIME = 0.011
 # wheel's one rotation length [cm]
 WHEEL_LENGTH = 20
 # turning radius [cm]  (car width / 2, because we are using tank drive system)
 TURNING_RADIUS = 4.5
 # angular velocity of the car [angle/s]
 ANGULAR_VELOCITY = 5
+
+def mapFromTo(x,a,b,c,d):
+    y=(x-a)/(b-a)*(d-c)+c
+    return y
 
 class Car:
     def __init__(self, mh, rMotor, lMotor):
@@ -26,7 +30,7 @@ class Car:
         self.angle = 0
 
         # car's current velocity
-        self.velocity: float = 1
+        self.velocity = 1
 
         # car's motors used to control it
         self.rMotor = mh.getMotor(rMotor)
@@ -117,8 +121,8 @@ class Car:
     # set the car's current velocity
     def setVelocity(self, v):
         self.velocity = v
-        self.rMotor.setSpeed(int((v / WHEEL_LENGTH) * 255))
-        self.lMotor.setSpeed(int((v / WHEEL_LENGTH) * 255))
+        self.rMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
+        self.lMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
 
     def move(self):
         if self.velocity > 0:    
@@ -130,9 +134,9 @@ class Car:
             self.rMotor.run(Adafruit_MotorHAT.FORWARD)
             self.lMotor.run(Adafruit_MotorHAT.FORWARD)
             
+            print(WHEEL_LENGTH * SPIN_TIME * mapFromTo(self.velocity, -100, 100, 0, 1))
             # wait for correct amount of rotations of the motors
-            print((self.velocity / WHEEL_LENGTH) * SPIN_TIME)
-            time.sleep((self.velocity / WHEEL_LENGTH)  * SPIN_TIME)
+            time.sleep(WHEEL_LENGTH  * SPIN_TIME * mapFromTo(self.velocity, -100, 100, 0, 1))
             self.stop()
 
         elif self.velocity < 0:
@@ -158,7 +162,7 @@ class Car:
 
     # indicate that the car is now stopping and stop it physically
     def stop(self):
-        # indicatethat the car has stopped
+        # indicate that the car has stopped
         self.state = self.stop
 
         # physically stop the car
