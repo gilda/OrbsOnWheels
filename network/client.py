@@ -26,7 +26,7 @@ class Client():
 
 def main():
     connection = Client(HTTPConnection("127.0.0.1", 4590))
-    connection.sendGET("/gamePhase")
+    connection.sendGET("/phase")
 
 if __name__ == "__main__":
     main()
