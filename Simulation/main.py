@@ -109,13 +109,6 @@ def iterate(i, *fargs):
 
 
 def main():
-    # dooers
-    # TODO fix waiting and stopping of all commands
-
-    # thinkers
-    # TODO make sure velocity is reasonable within WINDOW_SIZE
-    # TODO make everything an array of cars (?)
-
     fig = plt.figure()
     ax = plt.axes()
     ax.grid()

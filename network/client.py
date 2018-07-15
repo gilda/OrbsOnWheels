@@ -1,4 +1,5 @@
 from http.client import *
+from car import *
 
 class Client():
     # initiates the connection
@@ -25,8 +26,11 @@ class Client():
         print(resp.read())
 
 def main():
+    car = Car(1,0,0,0)
     connection = Client(HTTPConnection("127.0.0.1", 4590))
-    connection.sendGET("/phase")
+    connection.sendGET("/"+str(car.id)+"/phase")
+    connection.sendPOST("/"+str(car.id)+"/update", carToJson(car))
+
 
 if __name__ == "__main__":
     main()

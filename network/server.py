@@ -1,6 +1,5 @@
 from http.server import *
 from car import *
-import json
 import time
 
 def main():
@@ -8,7 +7,7 @@ def main():
     httpd.serve_forever()
 
 class Game:
-    def __init__(self, members):
+    def __init__(self, members, cars):
         # game always starts with DELAY
         self.members = members
         self.cars = cars
@@ -25,8 +24,8 @@ class Game:
     
     # update the car after it posted an update request
     def updateCar(self, ID, data):
-        # TODO make a function to deserialize the json format of the cars
-        pass
+        print(data)
+        return "updated" # TODO send a command
 
 class Server(BaseHTTPRequestHandler):
 
@@ -72,40 +71,25 @@ class Server(BaseHTTPRequestHandler):
         global cars
         global game
 
-        # print all parameters
-        print(self.path)
-        print(self.rfile.read(int(self.headers["Content-length"])))
-
         # split current path for easy processing
         path = self.path.split("/")
 
         # update all information about the car
         if path[2] == "update":
-            game.updateCar(path[1], self.rfile.read(int(self.headers["Content-length"])))
+            resp = game.updateCar(path[1], self.rfile.read(int(self.headers["Content-length"])))
 
-        # response code for response
-        self.send_response(200)
-        # add all headers for response
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
+            # response code for response
+            self.send_response(200)
+            # add all headers for response
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
 
-        # write to output file the message content
-        self.wfile.write(bytes("TODO", "utf-8"))
-        return
-
-# serialize the cars to json format for sending on the network
-def carToJson(car):
-    return bytes(json.dumps({"id": car.id,
-                        "pos": {"x": car.x,
-                                "y": car.y,
-                                "angle": car.angle}}, indent=4, sort_keys=False), "utf-8")
-
-def jsonToCar(jsonData):
-    # TODO implement this
-    pass
+            # write to output file the message content
+            self.wfile.write(bytes(resp, "utf-8"))
+            return
 
 cars = [Car(0, 0, 0, 0.1)]
-game = Game(3, cars)
+game = Game(len(cars), cars)
 
 if __name__ == "__main__":
     main()
