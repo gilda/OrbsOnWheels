@@ -4,7 +4,7 @@ import matplotlib.animation
 import math
 
 # other files
-from Simulation.car import *
+from car import *
 
 # window size for plotting
 WINDOW_SIZE = 1
@@ -204,7 +204,7 @@ def main(cars=[]):
 
     # main animation update function
     anim = matplotlib.animation.FuncAnimation(
-        fig, iterate, fargs=[car1, car2, car3] if cars == None else cars, interval=1000 / FPS)
+        fig, iterate, fargs=[car1, car2, car3], interval=1000 / FPS)
     plt.show()
 
 
