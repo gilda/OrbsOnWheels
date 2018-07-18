@@ -10,17 +10,69 @@ ELONGATE = 1.2
 # angular velocity of cars
 ANGULAR_VELOCITY = 10
 
+def calcTriangle(angle,  size, x = 0, y = 0):
+    # x and y are the center of the triangle
+    angle = angle - 90
+    point1 = [0, 0]
+    point2 = [0, 0]
+    point3 = [0, 0]
+
+    # coordinates without rotation aroung center 0,0
+    tempPoint1 = [size * math.cos(30 * ANGLE_TO_RAD),  -
+                  size * math.sin(30 * ANGLE_TO_RAD) * ELONGATE]
+    tempPoint2 = [0, size * ELONGATE]
+    tempPoint3 = [-size * math.cos(30 * ANGLE_TO_RAD), -
+                  size * math.sin(30 * ANGLE_TO_RAD) * ELONGATE]
+
+    # rotation
+    point1[0] = tempPoint1[0] * \
+        math.cos(angle * ANGLE_TO_RAD) - \
+        tempPoint1[1] * math.sin(angle * ANGLE_TO_RAD)
+    point1[1] = tempPoint1[0] * \
+        math.sin(angle * ANGLE_TO_RAD) + \
+        tempPoint1[1] * math.cos(angle * ANGLE_TO_RAD)
+
+    point2[0] = tempPoint2[0] * \
+        math.cos(angle * ANGLE_TO_RAD) - \
+        tempPoint2[1] * math.sin(angle * ANGLE_TO_RAD)
+    point2[1] = tempPoint2[0] * \
+        math.sin(angle * ANGLE_TO_RAD) + \
+        tempPoint2[1] * math.cos(angle * ANGLE_TO_RAD)
+
+    point3[0] = tempPoint3[0] * \
+        math.cos(angle * ANGLE_TO_RAD) - \
+        tempPoint3[1] * math.sin(angle * ANGLE_TO_RAD)
+    point3[1] = tempPoint3[0] * \
+        math.sin(angle * ANGLE_TO_RAD) + \
+        tempPoint3[1] * math.cos(angle * ANGLE_TO_RAD)
+
+    # shift into x,y poistion
+    point1[0] += x
+    point1[1] += y
+
+    point2[0] += x
+    point2[1] += y
+
+    point3[0] += x
+    point3[1] += y
+
+    # return points for drawing
+    return [point1, point2, point3]
+
+
 class Car:
-    def __init__(self, ID, x, y, size):
+    def __init__(self, ID, x, y, size, angle = 0):
         self.id = ID
         
         # cars's current coordinates and angle
         self.x = x
         self.y = y
-        self.angle = 0
+        self.angle = angle
 
         # car's current size
         self.size = size
+
+        self.patch = None
 
         # car's velocity in units per second
         self.velocity = 0
@@ -251,8 +303,9 @@ def carToJson(car):
     return bytes(json.dumps({"id": car.id,
                         "pos": {"x": car.x,
                                 "y": car.y,
-                                "angle": car.angle}}, indent=4, sort_keys=False), "utf-8")
+                                "angle": car.angle},
+                                "size": car.size}, indent=4, sort_keys=False), "utf-8")
 
 def jsonToCar(jsonData):
-    # TODO implement this
-    return "this doesnt work yet"
+    data = json.loads(jsonData)
+    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], data["pos"]["angle"])

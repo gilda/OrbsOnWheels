@@ -4,7 +4,7 @@ import matplotlib.animation
 import math
 
 # other files
-from car import *
+from Simulation.car import *
 
 # window size for plotting
 WINDOW_SIZE = 1
@@ -176,7 +176,7 @@ def iterate(i, *fargs):
     return car1.patch, car2.patch, car3.patch
 
 
-def main():
+def main(cars=[]):
     fig = plt.figure()
     ax = plt.axes()
     ax.grid()
@@ -194,13 +194,17 @@ def main():
                                                                        WINDOW_SIZE / 20), closed=True, facecolor="green"))
 
     # add patches to the drawing
-    ax.add_patch(car1.patch)
-    ax.add_patch(car2.patch)
-    ax.add_patch(car3.patch)
+    if cars == []:
+        ax.add_patch(car1.patch)
+        ax.add_patch(car2.patch)
+        ax.add_patch(car3.patch)
+    else:
+        for car in cars:
+            ax.add_patch(car.patch)
 
     # main animation update function
     anim = matplotlib.animation.FuncAnimation(
-        fig, iterate, fargs=[car1, car2, car3], interval=1000 / FPS)
+        fig, iterate, fargs=[car1, car2, car3] if cars == None else cars, interval=1000 / FPS)
     plt.show()
 
 

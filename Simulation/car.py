@@ -60,13 +60,13 @@ def calcTriangle(angle,  size, x = 0, y = 0):
 
 
 class Car:
-    def __init__(self, ID, x, y, size, patch):
+    def __init__(self, ID, x, y, size, patch, angle = 0):
         self.id = ID
         
         # cars's current coordinates and angle
         self.x = x
         self.y = y
-        self.angle = 0
+        self.angle = angle
 
         # car's current size
         self.size = size
