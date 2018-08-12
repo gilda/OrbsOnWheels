@@ -46,5 +46,8 @@ def main():
     connection.sendGET("/"+str(car2.id)+"/phase")
     connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
 
+    while True:
+        connection.sendGET("/"+str(car2.id)+"/phase")
+
 if __name__ == "__main__":
     main()
