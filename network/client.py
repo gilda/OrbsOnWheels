@@ -41,6 +41,11 @@ def main():
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car2.id)+"/phase")
     connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
+    connection.sendGET("/"+str(car2.id)+"/phase")
+
+    car2.x = 0.8
+    car2.y = 0.8
+    connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
 
     while True:
         connection.sendGET("/"+str(car2.id)+"/phase")

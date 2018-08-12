@@ -1,12 +1,18 @@
 from http.server import *
 from Simulation.car import *
 import time
+import matplotlib.pyplot as plt
 
+
+# initiate this module's game object
 game = None
 
 def main():
+    # construct game
     global game
     game = Game(3, [])
+
+    # start http server and serve
     httpd = HTTPServer(("127.0.0.1", 4590), Server)
     httpd.serve_forever()
 
@@ -22,12 +28,12 @@ class Game:
     def updateGamePhase(self, ID):
         # once all cars have stated that they are ready the game will start
         if self.members == len(self.ready):
+            # make sure all cars have sent their coordinates
             for i in self.cars:
                 if i == None:
                     return
 
             self.state = "START"
-            
             return
         # TODO check to finish game or restart
     
@@ -38,6 +44,10 @@ class Game:
         return "updated"
 
 class Server(BaseHTTPRequestHandler):
+
+    # disable logging and printing every request and response
+    def log_request(self, code):
+        pass
 
     def do_GET(self):
         global cars
@@ -92,8 +102,9 @@ class Server(BaseHTTPRequestHandler):
             resp = game.updateCar(path[1], data)
             
             # update car in game.cars list
-            print(data)
             game.cars[int(path[1])] = jsonToCar(data)
+            game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x, game.cars[int(path[1])].y),
+                                                        closed=True, facecolor=["red","green","blue"][game.cars[int(path[1])].id])
 
             # response code for response
             self.send_response(200)
@@ -104,6 +115,3 @@ class Server(BaseHTTPRequestHandler):
             # write to output file the message content
             self.wfile.write(bytes(resp, "utf-8"))
             return
-
-if __name__ == "__main__":
-    main()
