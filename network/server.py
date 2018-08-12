@@ -1,8 +1,12 @@
 from http.server import *
-from car import *
+from network.car import *
 import time
 
+game = None
+
 def main():
+    global game
+    game = Game(3, [])
     httpd = HTTPServer(("127.0.0.1", 4590), Server)
     httpd.serve_forever()
 
@@ -10,7 +14,7 @@ class Game:
     def __init__(self, members, cars):
         # game always starts with DELAY
         self.members = members
-        self.cars = cars
+        self.cars = [None] * self.members 
         self.state = "DELAY"
         self.ready = []
 
@@ -18,14 +22,20 @@ class Game:
     def updateGamePhase(self, ID):
         # once all cars have stated that they are ready the game will start
         if self.members == len(self.ready):
+            for i in self.cars:
+                if i == None:
+                    return
+
             self.state = "START"
+            
             return
         # TODO check to finish game or restart
     
     # update the car after it posted an update request
     def updateCar(self, ID, data):
-        print(data)
-        return "updated" # TODO send a command
+        # TODO send a command
+        print("updated")
+        return "updated"
 
 class Server(BaseHTTPRequestHandler):
 
@@ -76,7 +86,14 @@ class Server(BaseHTTPRequestHandler):
 
         # update all information about the car
         if path[2] == "update":
-            resp = game.updateCar(path[1], self.rfile.read(int(self.headers["Content-length"])))
+            data = self.rfile.read(int(self.headers["Content-length"]))
+            
+            # calculate response for car
+            resp = game.updateCar(path[1], data)
+            
+            # update car in game.cars list
+            print(data)
+            game.cars[int(path[1])] = jsonToCar(data)
 
             # response code for response
             self.send_response(200)
@@ -87,9 +104,6 @@ class Server(BaseHTTPRequestHandler):
             # write to output file the message content
             self.wfile.write(bytes(resp, "utf-8"))
             return
-
-cars = [Car(0, 0, 0, 0.1)]
-game = Game(len(cars), cars)
 
 if __name__ == "__main__":
     main()

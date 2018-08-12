@@ -2,9 +2,11 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation
 import math
+import threading
 
 # other files
 from Simulation.car import *
+import network.server as sv
 
 # window size for plotting
 WINDOW_SIZE = 1
@@ -185,6 +187,13 @@ def main(cars=[]):
     ax.axis("equal")
     ax.axis([0, WINDOW_SIZE, 0, WINDOW_SIZE])
 
+    while sv.game.state == "DELAY":
+        pass
+
+    print("Game Started!")
+    for i in sv.game.cars:
+        print(i.id)
+
     # create car patches for drawing on plot
     car1 = Car(0, 0.5, 0.5, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
                                                                        WINDOW_SIZE / 20), closed=True, facecolor="red"))
@@ -204,10 +213,12 @@ def main(cars=[]):
 
     # main animation update function
     anim = matplotlib.animation.FuncAnimation(
-        fig, iterate, fargs=[car1, car2, car3] if cars == None else cars, interval=1000 / FPS)
+        fig, iterate, fargs=[car1, car2, car3], interval=1000 / FPS)
     plt.show()
 
 
 # execute code only if file is not imported
 if __name__ == "__main__":
+    serverThread = threading.Thread(target = sv.main)
+    serverThread.start()
     main()
