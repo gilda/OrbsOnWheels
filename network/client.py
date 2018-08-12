@@ -47,8 +47,8 @@ def main():
     car2.y = 0.8
     connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
 
-    while True:
-        connection.sendGET("/"+str(car2.id)+"/phase")
+    for i in range(12):
+        connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
         time.sleep(10)
 
 if __name__ == "__main__":

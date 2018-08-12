@@ -2,10 +2,11 @@ from http.server import *
 from Simulation.car import *
 import time
 import matplotlib.pyplot as plt
-
+import threading
 
 # initiate this module's game object
 game = None
+lock = threading.Lock()
 
 def main():
     # construct game
@@ -101,10 +102,12 @@ class Server(BaseHTTPRequestHandler):
             # calculate response for car
             resp = game.updateCar(path[1], data)
             
+            lock.acquire()
             # update car in game.cars list
             game.cars[int(path[1])] = jsonToCar(data)
             game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x, game.cars[int(path[1])].y),
                                                         closed=True, facecolor=["red","green","blue"][game.cars[int(path[1])].id])
+            lock.release()
 
             # response code for response
             self.send_response(200)

@@ -13,21 +13,13 @@ WINDOW_SIZE = 1
 # frames per second
 FPS = 20
 
-lock = threading.Lock()
-
 def iterate(i, *fargs):
-    # get patches for drawing
-    car1 = sv.game.cars[0]
-    car2 = sv.game.cars[1]
-    car3 = sv.game.cars[2]
-
-    # draw all cars according to their coordinates
-    car1.draw()
-    car2.draw()
-    car3.draw()
-
-    # return cars for drawing
-    return car1.patch, car2.patch, car3.patch
+    try:
+        sv.lock.release()
+    except:
+        pass
+    sv.lock.acquire()
+    return sv.game.cars[0].patch, sv.game.cars[0].patch, sv.game.cars[0].patch
 
 def main(cars=[]):
     # set up window for drawing
