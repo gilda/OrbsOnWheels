@@ -27,27 +27,24 @@ class Client():
         print(resp.read())
 
 def main():
-    car0 = Car(0, 0.2, 0.2, 0)
+    car0 = Car(0, 0.2, 0.2, 0.1)
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car0.id)+"/phase")
     connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0))
 
-    time.sleep(3)
-
-    car1 = Car(1, 0.3, 0.3, 0)
+    car1 = Car(1, 0.3, 0.3, 0.1)
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car1.id)+"/phase")
     connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1))
     
-    time.sleep(3)
-
-    car2 = Car(2, 0.4, 0.4, 0)
+    car2 = Car(2, 0.4, 0.4, 0.1)
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car2.id)+"/phase")
     connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
 
     while True:
         connection.sendGET("/"+str(car2.id)+"/phase")
+        time.sleep(10)
 
 if __name__ == "__main__":
     main()

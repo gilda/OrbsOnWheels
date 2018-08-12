@@ -1,5 +1,5 @@
 from http.server import *
-from network.car import *
+from Simulation.car import *
 import time
 
 game = None
