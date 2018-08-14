@@ -18,7 +18,23 @@ ax = None
 
 
 def iterate(i, *fargs):
-    return [sv.game.cars[0].patch, sv.game.cars[1].patch, sv.game.cars[2].patch]
+    global ax
+
+    # clear all of the last patches
+    ax.clear()
+
+    # add grid to axis
+    ax.grid()
+    # make axis equal and scaled properly
+    ax.axis("equal")
+    ax.axis([0, WINDOW_SIZE, 0, WINDOW_SIZE])
+
+    # add new, updated, patches to draw
+    ax.add_patch(sv.game.cars[0].patch)
+    ax.add_patch(sv.game.cars[1].patch)
+    ax.add_patch(sv.game.cars[2].patch)
+
+    return sv.game.cars[0].patch, sv.game.cars[1].patch, sv.game.cars[2].patch
 
 
 def main(cars=[]):

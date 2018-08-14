@@ -316,4 +316,4 @@ def carToJson(car):
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], data["pos"]["angle"])
+    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"])

@@ -50,5 +50,11 @@ def main():
     connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
 
 
+    input("Update car 3 again?\n")
+    car2.x = 0.5
+    car2.y = 0.5
+    car2.angle = 30
+    connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
+
 if __name__ == "__main__":
     main()
