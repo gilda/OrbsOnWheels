@@ -14,19 +14,15 @@ WINDOW_SIZE = 1
 # frames per second
 FPS = 20
 
+ax = None
+
 
 def iterate(i, *fargs):
-    #sv.lock.acquire(blocking = True)
-
-    # sv.game.cars[0].draw()
-    # sv.game.cars[1].draw()
-    # sv.game.cars[2].draw()
-
-    # sv.lock.release()
-    return sv.game.cars[0].patch, sv.game.cars[1].patch, sv.game.cars[2].patch
+    return [sv.game.cars[0].patch, sv.game.cars[1].patch, sv.game.cars[2].patch]
 
 
 def main(cars=[]):
+    global ax
     # set up window for drawing
     fig = plt.figure()
     ax = plt.axes()
@@ -40,12 +36,6 @@ def main(cars=[]):
     while sv.game.state == "DELAY":
         pass
     print("Game Started!")
-
-    # create an intial polygon for all cars
-    for i in sv.game.cars:
-        i.patch = plt.Polygon(calcTriangle(
-            0, 1 / 20, i.x, i.y), closed=True, facecolor=["red", "green", "blue"][i.id])
-        ax.add_patch(i.patch)
 
     # main animation update function
     anim = matplotlib.animation.FuncAnimation(
