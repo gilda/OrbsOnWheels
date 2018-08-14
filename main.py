@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation
 import math
 import threading
+import copy
 
 # other files
 from Simulation.car import *
@@ -13,13 +14,17 @@ WINDOW_SIZE = 1
 # frames per second
 FPS = 20
 
+
 def iterate(i, *fargs):
-    try:
-        sv.lock.release()
-    except:
-        pass
-    sv.lock.acquire()
-    return sv.game.cars[0].patch, sv.game.cars[0].patch, sv.game.cars[0].patch
+    #sv.lock.acquire(blocking = True)
+
+    # sv.game.cars[0].draw()
+    # sv.game.cars[1].draw()
+    # sv.game.cars[2].draw()
+
+    # sv.lock.release()
+    return sv.game.cars[0].patch, sv.game.cars[1].patch, sv.game.cars[2].patch
+
 
 def main(cars=[]):
     # set up window for drawing
@@ -38,7 +43,8 @@ def main(cars=[]):
 
     # create an intial polygon for all cars
     for i in sv.game.cars:
-        i.patch = plt.Polygon(calcTriangle(0, 1 / 20, i.x, i.y), closed=True, facecolor=["red","green","blue"][i.id])
+        i.patch = plt.Polygon(calcTriangle(
+            0, 1 / 20, i.x, i.y), closed=True, facecolor=["red", "green", "blue"][i.id])
         ax.add_patch(i.patch)
 
     # main animation update function
@@ -50,8 +56,8 @@ def main(cars=[]):
 # execute code only if file is not imported
 if __name__ == "__main__":
     # create and run server thread so it will be non-blocking
-    serverThread = threading.Thread(target = sv.main)
+    serverThread = threading.Thread(target=sv.main)
     serverThread.start()
-    
+
     # start main and draw animation
     main()

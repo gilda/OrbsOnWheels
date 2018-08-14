@@ -8,6 +8,7 @@ import threading
 game = None
 lock = threading.Lock()
 
+
 def main():
     # construct game
     global game
@@ -17,11 +18,12 @@ def main():
     httpd = HTTPServer(("127.0.0.1", 4590), Server)
     httpd.serve_forever()
 
+
 class Game:
     def __init__(self, members, cars):
         # game always starts with DELAY
         self.members = members
-        self.cars = [None] * self.members 
+        self.cars = [None] * self.members
         self.state = "DELAY"
         self.ready = []
 
@@ -37,12 +39,13 @@ class Game:
             self.state = "START"
             return
         # TODO check to finish game or restart
-    
+
     # update the car after it posted an update request
     def updateCar(self, ID, data):
         # TODO send a command
         print("updated")
         return "updated"
+
 
 class Server(BaseHTTPRequestHandler):
 
@@ -53,9 +56,9 @@ class Server(BaseHTTPRequestHandler):
     def do_GET(self):
         global cars
         global game
-        # print all parameters        
+        # print all parameters
         print(self.path)
-        #print(self.headers)
+        # print(self.headers)
 
         # print all cars in json format
         if self.path == "/":
@@ -71,11 +74,11 @@ class Server(BaseHTTPRequestHandler):
 
         # split path to for easy porcessing
         path = self.path.split("/")
-        
+
         # the car is asking for the current phase
         if path[2] == "phase":
             # list all cars that are ready to start the game
-            if not path[1] in game.ready:
+            if not path[1] in game.ready and game.state == "DELAY":
                 game.ready.append(path[1])
 
             # initiate headers
@@ -87,7 +90,7 @@ class Server(BaseHTTPRequestHandler):
             game.updateGamePhase(path[2])
             self.wfile.write(bytes(game.state, "utf-8"))
             return
-    
+
     def do_POST(self):
         global cars
         global game
@@ -98,16 +101,18 @@ class Server(BaseHTTPRequestHandler):
         # update all information about the car
         if path[2] == "update":
             data = self.rfile.read(int(self.headers["Content-length"]))
-            
+
             # calculate response for car
             resp = game.updateCar(path[1], data)
-            
-            lock.acquire()
+
+            #lock.acquire(blocking = True)
             # update car in game.cars list
             game.cars[int(path[1])] = jsonToCar(data)
-            game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x, game.cars[int(path[1])].y),
-                                                        closed=True, facecolor=["red","green","blue"][game.cars[int(path[1])].id])
-            lock.release()
+            game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x,
+                                                                     game.cars[int(path[1])].y),
+                                                        closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])
+            game.cars[int(path[1])].draw()
+            # lock.release()
 
             # response code for response
             self.send_response(200)
