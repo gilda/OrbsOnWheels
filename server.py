@@ -46,6 +46,7 @@ class Game:
     def updateCar(self, ID, data):
         # TODO send back a command
         print("updated car " + str(ID) + "'s coordinates!")
+        #return "ROT 30"
         return "updated"
 
 

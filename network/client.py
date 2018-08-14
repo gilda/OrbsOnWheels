@@ -24,8 +24,10 @@ class Client():
 
         # get and print response
         resp = self.conn.getresponse()
+        response = resp.read()
         print(resp.status, resp.reason)
-        print(resp.read())
+        # tell car to parse(response).execute()
+        print(response)
 
 
 def main():
