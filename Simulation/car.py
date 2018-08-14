@@ -1,4 +1,5 @@
 import math
+import json
 
 # angle in degrees to rad constant
 ANGLE_TO_RAD = math.pi / 180
@@ -9,7 +10,7 @@ ELONGATE = 1.2
 ANGULAR_VELOCITY = 10
 
 
-def calcTriangle(angle,  size, x = 0, y = 0):
+def calcTriangle(angle,  size, x=0, y=0):
     # x and y are the center of the triangle
     angle = angle - 90
     point1 = [0, 0]
@@ -60,9 +61,9 @@ def calcTriangle(angle,  size, x = 0, y = 0):
 
 
 class Car:
-    def __init__(self, ID, x, y, size, patch, angle = 0):
+    def __init__(self, ID, x, y, size, patch, angle=0):
         self.id = ID
-        
+
         # cars's current coordinates and angle
         self.x = x
         self.y = y
@@ -298,6 +299,21 @@ class Car:
     def setVelocity(self, v):
         self.velocity = v
 
-    # change state to stop so next command can be interpreted   
+    # change state to stop so next command can be interpreted
     def stop(self):
         self.state = self.stop
+
+# serialize the cars to json format for sending on the network
+
+
+def carToJson(car):
+    return bytes(json.dumps({"id": car.id,
+                             "pos": {"x": car.x,
+                                     "y": car.y,
+                                     "angle": car.angle},
+                             "size": car.size}, indent=4, sort_keys=False), "utf-8")
+
+
+def jsonToCar(jsonData):
+    data = json.loads(jsonData)
+    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"])

@@ -2,7 +2,7 @@ from Adafruit_BNO055 import BNO055
 from kalman import KalmanFilter
 import time
 
-bno = BNO055.BNO055(serial_port="/dev/serial0" ,rst = 18)
+bno = BNO055.BNO055(serial_port="/dev/serial0", rst=18)
 
 cal_x = []
 cal_y = []
@@ -11,6 +11,7 @@ cal_z = []
 min_x = max_x = avg_x = None
 min_y = max_y = avg_y = None
 min_z = max_z = avg_z = None
+
 
 def calibrate(t):
     global cal_X
@@ -28,13 +29,13 @@ def calibrate(t):
     global max_z
     global min_z
     global avg_z
-   
+
     for i in range(1000):
         x, y, z = bno.read_linear_acceleration()
         cal_x.append(x)
         cal_y.append(y)
         cal_z.append(z)
-        
+
         time.sleep(t / 1000)
 
     min_x = min(cal_x)
@@ -50,6 +51,7 @@ def calibrate(t):
     avg_z = sum(cal_z) / len(cal_z)
 
     print(max_x, min_x, avg_x, max_y, min_y, avg_y, max_z, min_z, avg_z)
+
 
 if not bno.begin():
     print("error, maybe connection is bad?")
@@ -84,18 +86,16 @@ while True:
     x, y, z = bno.read_linear_acceleration()
     #print("\nheading: "+str(heading)+", roll: "+str(roll)+", pitch: "+str(pitch))
     #print("X: "+str(x/100)+", Y: "+str(y/100)+", Z: "+str(z/100)+"")
-    
+
     kalmanFilter.input_latest_noisy_measurement(x)
     kX = kalmanFilter.get_latest_estimated_measurement()
 
     carkvX += kx * WAIT
-    carkX += carkvX * WAIT 
+    carkX += carkvX * WAIT
     print("{0:0.3F} {1:0.3F} {2:0.3F}".format(kX, carkvX, carkX))
-    
 
     if not (x < max_x and x > min_x):
         carvX += ((x + caraX + avg_x) / 2) * WAIT
-        
 
     if y > 0:
         carvY += round(y, 3) * WAIT
@@ -103,15 +103,14 @@ while True:
         carvY += round(y, 3) * WAIT
 
     carX += carvX * WAIT
-    carY += carvY * WAIT 
-    
+    carY += carvY * WAIT
+
     print("{0:0.3F} {1:0.3F} {2:0.3F}".format(caraX, carvX, carX))
 
     caraX = x
     caraY = round(y, 3)
-    
+
     carAnle = heading
-    #print("CAR:")
+    # print("CAR:")
     #print(carX, carY, heading)
     time.sleep(WAIT)
-

@@ -17,9 +17,10 @@ def main():
         car1.setVelocity(70)
         car1.move()
         car1.move()
-    
+
     print("Car stopped!")
     car1.stop()
+
 
 if __name__ == "__main__":
     main()
