@@ -44,7 +44,6 @@ cmd1Index = 0
 cmd2Input = ["RAD 0.2 -90", "MOVXY 0.8 0.6", "WAIT 30", "ROT 180"]
 cmd2Index = 0
 
-# TODO make client simulate just as main currently simulates
 def main():
     global cmd0
     global cmd1
@@ -213,7 +212,7 @@ def main():
             connection.sendGET("/"+str(car2.id)+"/phase")
             connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
     else:
-        # TODO dont use sim
+        # TODO dont use sim so what should you do?
         pass
     
 if __name__ == "__main__":
