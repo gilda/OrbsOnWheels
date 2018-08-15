@@ -2,7 +2,11 @@ from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 from robotCar import Car, WHEEL_LENGTH, SPIN_TIME
 import time
 
-
+# TODO add the client code for the robot
+# TODO make the main function call a thread for networking
+#      and a thread for robot timeouts
+# TODO check car run time and spin time
+# TODO maybe just maybe figure out gyro and positioning feedback
 def main():
     # get the motor driver object
     mh = Adafruit_MotorHAT(addr=0x60)
