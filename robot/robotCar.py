@@ -74,12 +74,7 @@ class Car:
             return
         self.interval -= 1
 
-    # update velocity and angle from gyro readings
-    def update(self):
-        pass
-        #self.velocity += getAccelerationForward
-        #self.angle = getAngle
-
+    # TODO implement this
     # rotate the car to some desired angle
     def rotate(self, angle):
         if self.stateChange(self.rotate) != True:
@@ -92,42 +87,19 @@ class Car:
         anglediff = (angle-self.angle+180) % 360 + 180
 
         if self.angle != angle:
-            if anglediff > 0:
-                # consider overshooting the target angle because ANGULAR_VELOCITY os too high
-                if anglediff < ANGULAR_VELOCITY:
-                    self.angle = angle
-                else:
-                    # rotate
-                    self.angle = (self.angle + ANGULAR_VELOCITY) % 360
-
-                    # rotate robot
-                    self.rMotor.run(Adafruit_MotorHAT.FORWARD)
-                    self.lMotor.run(Adafruit_MotorHAT.BACKWARD)
-                    time.sleep(SPIN_TIME * (TURNING_RADIUS * math.pi *
-                                            2 / WHEEL_LENGTH) * (ANGULAR_VELOCITY / 360))
-            else:
-                # consider overshhoting target angle
-                if anglediff > -ANGULAR_VELOCITY:
-                    self.angle = angle
-                else:
-                    # rotate
-                    self.angle = (self.angle - ANGULAR_VELOCITY) % 360
-
-                    # rotate robot
-                    self.rMotor.run(Adafruit_MotorHAT.BACKWARD)
-                    self.lMotor.run(Adafruit_MotorHAT.FORWARD)
-                    time.sleep(SPIN_TIME * (TURNING_RADIUS * math.pi *
-                                            2 / WHEEL_LENGTH) * (ANGULAR_VELOCITY / 360))
+            pass
         else:
             # stop when desired angle was reached
             self.stop()
 
+    # TODO implement this
     # set the car's current velocity
     def setVelocity(self, v):
         self.velocity = v
         self.rMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
         self.lMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
 
+    # TODO implement this
     def move(self):
         if self.velocity > 0:
             # add values to x and y
@@ -158,10 +130,12 @@ class Car:
             time.sleep((self.velocity / WHEEL_LENGTH) * SPIN_TIME)
             self.stop()
 
+    # TODO
     # move the car to some desired x y position [cm]
     def move_xy(self, x, y):
         pass
 
+    # TODO
     # move the car in some rasius until some angle was achieved
     def move_rad(self, rad, angle):
         pass
