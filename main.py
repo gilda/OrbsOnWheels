@@ -14,7 +14,7 @@ USE_SERVER = True
 # window size for plotting
 WINDOW_SIZE = 1
 # frames per second
-FPS = 15
+FPS = 10
 
 ax = None
 

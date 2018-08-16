@@ -80,6 +80,7 @@ def main():
 
     if USE_SIM:
         input("start simulating?\n")
+        time.sleep(3)
         while True:
 
             # change and ask for new state only if the current state is stop
