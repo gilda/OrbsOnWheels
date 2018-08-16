@@ -4,9 +4,16 @@ import time
 
 # TODO add the client code for the robot
 # TODO make the main function call a thread for networking
+# TODO code Architecture:
+#      main calls the networking infinite loop.
+#      networking updates the server about the where-abouts of the car
+#      the main function parses any command that the car recieved.
+#      the robotCar executes the command given and updates the cars position parameters for the networking.
+#
 #      and a thread for robot timeouts
 # TODO check car run time and spin time
 # TODO maybe just maybe figure out gyro and positioning feedback
+
 def main():
     # get the motor driver object
     mh = Adafruit_MotorHAT(addr=0x60)
