@@ -5,6 +5,7 @@ import time
 HOST = "127.0.0.1"
 PORT = 4590
 
+
 class Client():
     # initiates the connection
     def __init__(self, conn):
@@ -33,14 +34,19 @@ class Client():
         return response
 
 # TODO implement recieve command
+
+
 def recieveCommand():
     pass
+
 
 def sendPhase(car):
     connection = Client(HTTPConnection(HOST, PORT))
     connection.sendGET("/"+str(car.id)+"/phase")
 
 # send the car's coordinates and ID to the server
+
+
 def sendUpdate(car):
     connection = Client(HTTPConnection(HOST, PORT))
     connection.sendGET("/"+str(car.id)+"/phase")

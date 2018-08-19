@@ -31,7 +31,7 @@ class Car:
         self.x = 0
         # car's current y position
         self.y = 0
-        
+
         # car's current size
         self.size = size
 
@@ -164,6 +164,7 @@ class Car:
 
 # serialize the cars to json format for sending on the network
 
+
 def carToJson(car):
     return bytes(json.dumps({"id": car.id,
                              "pos": {"x": car.x,
@@ -174,5 +175,4 @@ def carToJson(car):
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"])
-
+    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle=data["pos"]["angle"])

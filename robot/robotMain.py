@@ -15,6 +15,7 @@ USE_MOTOR = False
 if USE_MOTOR:
     from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 
+
 def main():
     if USE_MOTOR:
         # get the motor driver object
@@ -23,11 +24,11 @@ def main():
     # create the car
     car1 = Car(0, 0.1, mh if USE_MOTOR else None, 3, 4, USE_MOTOR)
 
-    #update thread
-    updateThread = threading.Thread(target = robotClient.sendUpdate, args = (car1,))
+    # update thread
+    updateThread = threading.Thread(
+        target=robotClient.sendUpdate, args=(car1,))
 
     robotClient.sendPhase(car1)
-    
 
 
 if __name__ == "__main__":

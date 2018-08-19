@@ -228,7 +228,6 @@ def main(cars=[]):
         ax.add_patch(car2.patch)
         ax.add_patch(car3.patch)
 
-
     # main animation update function
     anim = matplotlib.animation.FuncAnimation(
         fig, iterate, fargs=[car1, car2, car3] if not USE_SERVER else None, interval=1000 / FPS)

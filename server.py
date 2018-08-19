@@ -8,6 +8,7 @@ import threading
 game = None
 lock = threading.Lock()
 
+
 def main():
     # construct game
     global game
@@ -27,7 +28,7 @@ class Game:
         self.ready = []
 
     # calculate the game phase and update it
-    def updateGamePhase(self, ID = None):
+    def updateGamePhase(self, ID=None):
         # update game state when an "update" message was recieved
         if ID == None and 0 in self.cars:
             return
@@ -36,17 +37,17 @@ class Game:
         for i in self.cars:
             if i == 0:
                 return
-        
+
         if 0 not in self.cars:
             self.state = "START"
-        
+
         # TODO check to finish game or restart
 
     # update the car after it posted an update request
     def updateCar(self, ID, data):
         # TODO send back a command
         print("updated car " + str(ID) + "'s coordinates!")
-        #return "ROT 30"
+        # return "ROT 30"
         return "updated"
 
 
@@ -87,7 +88,7 @@ class Server(BaseHTTPRequestHandler):
 
             # send to game object that the client has sent a new "phase" message
             game.updateGamePhase(path[1])
-            
+
             # send to client the current game's state
             self.wfile.write(bytes(game.state, "utf-8"))
             return
@@ -112,7 +113,7 @@ class Server(BaseHTTPRequestHandler):
             game.cars[int(path[1])] = jsonToCar(data)
             game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x,
                                                                      game.cars[int(path[1])].y),
-                                                        closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])         
+                                                        closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])
             game.cars[int(path[1])].draw()
             # update the game phase
             game.updateGamePhase()

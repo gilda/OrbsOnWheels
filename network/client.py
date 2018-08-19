@@ -29,6 +29,7 @@ class Client():
         # tell car to parse(response).execute()
         print(response)
 
+
 USE_SIM = True
 
 cmd0 = ""
@@ -44,6 +45,7 @@ cmd1Index = 0
 cmd2Input = ["RAD 0.2 -90", "MOVXY 0.8 0.6", "WAIT 30", "ROT 180"]
 cmd2Index = 0
 
+
 def main():
     global cmd0
     global cmd1
@@ -58,25 +60,24 @@ def main():
 
     car0 = Car(0, 0.5, 0.5, 0.1)
     car0.setVelocity(0.005)
-    
+
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car0.id)+"/phase")
     connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0))
 
     car1 = Car(1, 0.4, 0.4, 0.1)
     car1.setVelocity(0.005)
-    
+
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car1.id)+"/phase")
     connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1))
 
     car2 = Car(2, 0.2, 0.6, 0.1)
-    car2.setVelocity(0.005)    
-    
+    car2.setVelocity(0.005)
+
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car2.id)+"/phase")
     connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
-
 
     if USE_SIM:
         input("start simulating?\n")
@@ -118,11 +119,10 @@ def main():
                     car0.decInterval()
                 else:
                     print("No such command")
-            
+
             # decrease car wait time interval
             car0.decInterval()
 
-                
             # change and ask for new state only if the current state is stop
             # meaning that all current commands were accomplished
             if car1.state == None or car1.state == car1.stop:
@@ -215,6 +215,7 @@ def main():
     else:
         # TODO dont use sim so what should you do?
         pass
-    
+
+
 if __name__ == "__main__":
     main()
