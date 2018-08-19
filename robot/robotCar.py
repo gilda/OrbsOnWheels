@@ -23,11 +23,15 @@ def mapFromTo(x, a, b, c, d):
 
 
 class Car:
-    def __init__(self, mh, rMotor, lMotor):
+    def __init__(self, id, size, mh, rMotor, lMotor):
         # car's current x position
         self.x = 0
         # car's current y position
         self.y = 0
+        
+        # car's current size
+        self.size = size
+
         # car's current angle
         self.angle = 0
 
@@ -130,12 +134,12 @@ class Car:
             time.sleep((self.velocity / WHEEL_LENGTH) * SPIN_TIME)
             self.stop()
 
-    # TODO
+    # TODO implement this
     # move the car to some desired x y position [cm]
     def move_xy(self, x, y):
         pass
 
-    # TODO
+    # TODO implement this
     # move the car in some rasius until some angle was achieved
     def move_rad(self, rad, angle):
         pass
@@ -148,3 +152,18 @@ class Car:
         # physically stop the car
         self.rMotor.run(Adafruit_MotorHAT.RELEASE)
         self.lMotor.run(Adafruit_MotorHAT.RELEASE)
+
+# serialize the cars to json format for sending on the network
+
+def carToJson(car):
+    return bytes(json.dumps({"id": car.id,
+                             "pos": {"x": car.x,
+                                     "y": car.y,
+                                     "angle": car.angle},
+                             "size": car.size}, indent=4, sort_keys=False), "utf-8")
+
+
+def jsonToCar(jsonData):
+    data = json.loads(jsonData)
+    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"])
+

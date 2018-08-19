@@ -2,6 +2,8 @@ from http.client import *
 from car import *
 import time
 
+HOST = "127.0.0.1"
+PORT = 4590
 
 class Client():
     # initiates the connection
@@ -28,13 +30,19 @@ class Client():
         print(resp.status, resp.reason)
         # tell car to parse(response).execute()
         print(response)
+        return response
 
 # TODO implement recieve command
-def recieveExecute():
+def recieveCommand():
     pass
 
-def sendUpdate(car):
-    connection = Client(HTTPConnection("127.0.0.1", 4590))
+def sendPhase(car):
+    connection = Client(HTTPConnection(HOST, PORT))
     connection.sendGET("/"+str(car.id)+"/phase")
-    connection.sendPOST("/"+str(car.id)+"/update", carToJson(car))
 
+# send the car's coordinates and ID to the server
+def sendUpdate(car):
+    connection = Client(HTTPConnection(HOST, PORT))
+    connection.sendGET("/"+str(car.id)+"/phase")
+    resp = connection.sendPOST("/"+str(car.id)+"/update", carToJson(car))
+    return resp

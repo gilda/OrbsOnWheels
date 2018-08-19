@@ -1,5 +1,6 @@
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-from robotCar import Car, WHEEL_LENGTH, SPIN_TIME
+from robotCar import *
+from robotClient import *
 import time
 
 # TODO code Architecture:
@@ -20,18 +21,17 @@ def main():
     mh = Adafruit_MotorHAT(addr=0x60)
 
     # create the car
-    car1 = Car(mh, 3, 4)
+    car1 = Car(0, 0.1, mh, 3, 4)
 
-    print("motors are running!")
-    print("rotating...")
+    #update thread
+    updateThread = threading.Thread(target = robotClient.sendUpdate, args = (car1))
 
-    while car1.state != car1.stop:
-        car1.setVelocity(70)
-        car1.move()
-        car1.move()
-
-    print("Car stopped!")
-    car1.stop()
+    sendPhase(car1)
+    time.sleep(5)
+    while True:
+        x = updateThread.start()
+        print(x)
+        updateThread.join()
 
 
 if __name__ == "__main__":
