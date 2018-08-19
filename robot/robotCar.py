@@ -1,6 +1,6 @@
-from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 import time
 import math
+import json
 
 # angle to radians
 ANGLE_TO_RAD = math.pi / 180
@@ -23,7 +23,10 @@ def mapFromTo(x, a, b, c, d):
 
 
 class Car:
-    def __init__(self, id, size, mh, rMotor, lMotor):
+    def __init__(self, ID, size, mh, rMotor, lMotor, USE_MOTOR):
+        self.id = ID
+        self.USE_MOTOR = USE_MOTOR
+
         # car's current x position
         self.x = 0
         # car's current y position
@@ -38,9 +41,11 @@ class Car:
         # car's current velocity
         self.velocity = 1
 
-        # car's motors used to control it
-        self.rMotor = mh.getMotor(rMotor)
-        self.lMotor = mh.getMotor(lMotor)
+        if self.USE_MOTOR:
+            from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+            # car's motors used to control it
+            self.rMotor = mh.getMotor(rMotor)
+            self.lMotor = mh.getMotor(lMotor)
 
         # car's state and waiting time
         self.state = None
@@ -100,8 +105,9 @@ class Car:
     # set the car's current velocity
     def setVelocity(self, v):
         self.velocity = v
-        self.rMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
-        self.lMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
+        if self.USE_MOTOR:
+            self.rMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
+            self.lMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
 
     # TODO implement this
     def move(self):
@@ -110,9 +116,10 @@ class Car:
             self.x += self.velocity * math.cos(self.angle * ANGLE_TO_RAD)
             self.y += self.velocity * math.sin(self.angle * ANGLE_TO_RAD)
 
-            # initiate motors rotation
-            self.rMotor.run(Adafruit_MotorHAT.FORWARD)
-            self.lMotor.run(Adafruit_MotorHAT.FORWARD)
+            if self.USE_MOTOR:
+                # initiate motors rotation
+                self.rMotor.run(Adafruit_MotorHAT.FORWARD)
+                self.lMotor.run(Adafruit_MotorHAT.FORWARD)
 
             print(WHEEL_LENGTH * SPIN_TIME *
                   mapFromTo(self.velocity, -100, 100, 0, 1))
@@ -126,9 +133,10 @@ class Car:
             self.x += self.velocity * math.cos(self.angle * ANGLE_TO_RAD)
             self.y += self.velocity * math.sin(self.angle * ANGLE_TO_RAD)
 
-            # initiate motors rotation
-            self.rMotor.run(Adafruit_MotorHAT.BACKWARD)
-            self.lMotor.run(Adafruit_MotorHAT.BACKWARD)
+            if self.USE_MOTOR:
+                # initiate motors rotation
+                self.rMotor.run(Adafruit_MotorHAT.BACKWARD)
+                self.lMotor.run(Adafruit_MotorHAT.BACKWARD)
 
             # wait for correct amount of rotations of the motor
             time.sleep((self.velocity / WHEEL_LENGTH) * SPIN_TIME)
@@ -149,9 +157,10 @@ class Car:
         # indicate that the car has stopped
         self.state = self.stop
 
-        # physically stop the car
-        self.rMotor.run(Adafruit_MotorHAT.RELEASE)
-        self.lMotor.run(Adafruit_MotorHAT.RELEASE)
+        if self.USE_MOTOR:
+            # physically stop the car
+            self.rMotor.run(Adafruit_MotorHAT.RELEASE)
+            self.lMotor.run(Adafruit_MotorHAT.RELEASE)
 
 # serialize the cars to json format for sending on the network
 
