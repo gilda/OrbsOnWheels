@@ -14,7 +14,7 @@ USE_SERVER = True
 # window size for plotting
 WINDOW_SIZE = 1
 # frames per second
-FPS = 10
+FPS = sv.FPS
 
 ax = None
 
@@ -227,7 +227,6 @@ def main(cars=[]):
         ax.add_patch(car1.patch)
         ax.add_patch(car2.patch)
         ax.add_patch(car3.patch)
-
 
     # main animation update function
     anim = matplotlib.animation.FuncAnimation(
