@@ -33,47 +33,32 @@ class Client():
 USE_SIM = True
 
 def main():
-    car0 = Car(0, 0.5, 0.5, 0.1)
+    car0 = Car(0, 0.5, 0.5, 0.1, None)
     car0.setVelocity(0.005)
     
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car0.id)+"/phase")
-    connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0))
+    cmd0 = connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
 
-    car1 = Car(1, 0.4, 0.4, 0.1)
+    car1 = Car(1, 0.4, 0.4, 0.1, None)
     car1.setVelocity(0.005)
     
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car1.id)+"/phase")
-    connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1))
+    cmd1 = connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
 
-    car2 = Car(2, 0.2, 0.6, 0.1)
+    car2 = Car(2, 0.2, 0.6, 0.1, None)
     car2.setVelocity(0.005)    
     
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car2.id)+"/phase")
-    connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2))
+    cmd2 = connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
 
 
     if USE_SIM:
         input("start simulating?\n")
         time.sleep(3)
         while True:
-
-            # send all of the cars data to the server for simulation to display
-            connection = Client(HTTPConnection("127.0.0.1", 4590))
-            connection.sendGET("/"+str(car0.id)+"/phase")
-            cmd0 = connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
-
-            connection = Client(HTTPConnection("127.0.0.1", 4590))
-            connection.sendGET("/"+str(car1.id)+"/phase")
-            cmd1 = connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
-
-            connection = Client(HTTPConnection("127.0.0.1", 4590))
-            connection.sendGET("/"+str(car2.id)+"/phase")
-            cmd2 = connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
-
-            print(cmd0, cmd1, cmd2)
 
             if cmd0[0] == "ROT":
                 car0.rotate(int(cmd0[1]))
@@ -84,7 +69,8 @@ def main():
             elif cmd0[0] == "RAD":
                 car0.move_rad(float(cmd0[1]), float(cmd0[2]))
             elif cmd0[0] == "WAIT":
-                car0.wait(int(cmd0[1]))
+                if car0.interval == 0 or car0.interval == None:
+                    car0.wait(int(cmd0[1]))
             else:
                 print("No such command")
             car0.decInterval()
@@ -99,7 +85,8 @@ def main():
             elif cmd1[0] == "RAD":
                 car1.move_rad(float(cmd1[1]), float(cmd1[2]))
             elif cmd1[0] == "WAIT":
-                car1.wait(int(cmd1[1]))
+                if car1.interval == 0 or car1.interval == None:
+                    car1.wait(int(cmd1[1]))
             else:
                 print("No such command")
             # draw the car after all changes were made
@@ -114,13 +101,26 @@ def main():
             elif cmd2[0] == "RAD":
                 car2.move_rad(float(cmd2[1]), float(cmd2[2]))
             elif cmd2[0] == "WAIT":
-                car2.wait(int(cmd2[1]))
+                if car2.interval == 0 or car2.interval == None:
+                    car2.wait(int(cmd2[1]))
             else:
                 print("No such command")
             car2.decInterval()
 
-            print(car0.x, car0.y, car1.x, car1.y, car2.x, car2.y)
-            time.sleep(0.4)
+            # send all of the cars data to the server for simulation to display
+            connection = Client(HTTPConnection("127.0.0.1", 4590))
+            connection.sendGET("/"+str(car0.id)+"/phase")
+            cmd0 = connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
+
+            connection = Client(HTTPConnection("127.0.0.1", 4590))
+            connection.sendGET("/"+str(car1.id)+"/phase")
+            cmd1 = connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
+
+            connection = Client(HTTPConnection("127.0.0.1", 4590))
+            connection.sendGET("/"+str(car2.id)+"/phase")
+            cmd2 = connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
+
+            time.sleep(0.01)
     else:
         # TODO dont use sim so what should you do?
         pass

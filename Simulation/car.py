@@ -61,7 +61,7 @@ def calcTriangle(angle,  size, x=0, y=0):
 
 
 class Car:
-    def __init__(self, ID, x, y, size, patch, angle=0):
+    def __init__(self, ID, x, y, size, patch, angle=0, interval = None):
         self.id = ID
 
         # cars's current coordinates and angle
@@ -82,7 +82,7 @@ class Car:
         self.state = None
 
         # car's waiting time
-        self.interval = None
+        self.interval = interval
 
     # checks if you can change states
     # you change from stop to anything and from anything to stop
@@ -320,12 +320,14 @@ def carToJson(car):
                              "pos": {"x": car.x,
                                      "y": car.y,
                                      "angle": car.angle},
-                             "size": car.size}, indent=4, sort_keys=False), "utf-8")
+                             "size": car.size,
+                             "interval": car.interval},
+                             indent=4, sort_keys=False), "utf-8")
 
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], data["pos"]["angle"])
+    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"], interval = data["interval"])
     if data["state"] == "None":
         c.state == None
     elif data["state"] == "stop":

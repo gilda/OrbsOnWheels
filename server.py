@@ -58,7 +58,7 @@ class Game:
 
     # update the car after it posted an update request
     def updateCar(self, ID, data, USE_NET = False):
-        print("updated car " + str(ID) + "'s coordinates!")        
+        #print("updated car " + str(ID) + "'s coordinates!")        
         if USE_NET:
             # TODO send car's data and get back a command
             pass
@@ -76,7 +76,7 @@ class Game:
             global cmd2Input
 
             if ID == 0:
-                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop:
+                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
                     if cmd0Index < len(cmd0Input) - 1:
                         cmd0 = cmd0Input[cmd0Index]
                         cmd0Index += 1
@@ -85,7 +85,7 @@ class Game:
                     return cmd0
             
             if ID == 1:
-                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop:
+                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
                     if cmd1Index < len(cmd1Input) - 1:
                         cmd1 = cmd1Input[cmd1Index]
                         cmd1Index += 1
@@ -94,7 +94,7 @@ class Game:
                     return cmd1
 
             if ID == 2:
-                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop:
+                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
                     if cmd2Index < len(cmd2Input) - 1:
                         cmd2 = cmd2Input[cmd2Index]
                         cmd2Index += 1
@@ -121,7 +121,7 @@ class Server(BaseHTTPRequestHandler):
         global cars
         global game
         # print all parameters
-        print("GET", self.path)
+        #print("GET", self.path)
 
         # print all cars in json format
         if self.path == "/":
@@ -156,26 +156,27 @@ class Server(BaseHTTPRequestHandler):
         global cars
         global game
 
-        print("POST", self.path)
+        #print("POST", self.path)
         # split current path for easy processing
         path = self.path.split("/")
 
         # update all information about the car
         if path[2] == "update":
             data = self.rfile.read(int(self.headers["Content-length"]))
-
             lock.acquire()
-            if game.cars[int(path[1])] != 0:
-                resp = game.updateCar(int(path[1]), data)
-            else:
-                game.cars[int(path[1])] = jsonToCar(data)
-                resp = ""
+            
             # update car in game.cars list and update the patch for simulation
             game.cars[int(path[1])] = jsonToCar(data)
             game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x,
                                                                      game.cars[int(path[1])].y),
                                                         closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])         
+            
             game.cars[int(path[1])].draw()
+            if game.cars[int(path[1])] != 0:
+                resp = game.updateCar(int(path[1]), data)
+            else:
+                game.cars[int(path[1])] = jsonToCar(data)
+                resp = ""
             # update the game phase
             game.updateGamePhase()
             lock.release()
