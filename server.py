@@ -112,7 +112,6 @@ class Game:
             if c.id == ID:
                 return c
         return None
->>>>>>> master
 
 
 class Server(BaseHTTPRequestHandler):
@@ -173,12 +172,8 @@ class Server(BaseHTTPRequestHandler):
             game.cars[int(path[1])] = jsonToCar(data)
             game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x,
                                                                      game.cars[int(path[1])].y),
-<<<<<<< HEAD
-                                                        closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])
-=======
                                                         closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])         
             
->>>>>>> master
             game.cars[int(path[1])].draw()
             if game.cars[int(path[1])] != 0 and SEND_COMMAND:
                 resp = game.updateCar(int(path[1]), data)

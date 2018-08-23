@@ -327,9 +327,6 @@ def carToJson(car):
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-<<<<<<< HEAD
-    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle=data["pos"]["angle"])
-=======
     c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"], interval = data["interval"])
     if data["state"] == "None":
         c.state == None
@@ -347,4 +344,3 @@ def jsonToCar(jsonData):
         c.state = c.move_rad
     return c
     
->>>>>>> master
