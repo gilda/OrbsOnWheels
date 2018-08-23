@@ -9,14 +9,16 @@ game = None
 lock = threading.Lock()
 FPS = 10
 
+SEND_COMMAND = False
+
 cmd0 = ""
 cmd1 = ""
 cmd2 = ""
 
-cmd0Input = ["WAIT 100", "ROT 30", "MOVXY 0.5 0.3", "WAIT 30", "ROT 180"]
+cmd0Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30"]
 cmd0Index = 0
 
-cmd1Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30"]
+cmd1Input = ["WAIT 100", "ROT 30", "MOVXY 0.5 0.3", "WAIT 30", "ROT 180"]
 cmd1Index = 0
 
 cmd2Input = ["RAD 0.2 -90", "MOVXY 0.8 0.6", "WAIT 30", "ROT 180"]
@@ -41,7 +43,7 @@ class Game:
         self.ready = []
 
     # calculate the game phase and update it
-    def updateGamePhase(self, ID=None):
+    def updateGamePhase(self, ID = None):
         # update game state when an "update" message was recieved
         if ID == None and 0 in self.cars:
             return
@@ -172,11 +174,15 @@ class Server(BaseHTTPRequestHandler):
                                                         closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])         
             
             game.cars[int(path[1])].draw()
-            if game.cars[int(path[1])] != 0:
+            if game.cars[int(path[1])] != 0 and SEND_COMMAND:
                 resp = game.updateCar(int(path[1]), data)
             else:
                 game.cars[int(path[1])] = jsonToCar(data)
-                resp = ""
+                game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x,
+                                                                     game.cars[int(path[1])].y),
+                                                        closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])
+                game.cars[int(path[1])].draw()
+                resp = "CONT"
             # update the game phase
             game.updateGamePhase()
             lock.release()
