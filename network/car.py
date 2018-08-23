@@ -1,6 +1,5 @@
 import math
 import json
-from collections import namedtuple
 
 # angle in degrees to rad constant
 ANGLE_TO_RAD = math.pi / 180
@@ -62,7 +61,7 @@ def calcTriangle(angle,  size, x=0, y=0):
 
 
 class Car:
-    def __init__(self, ID, x, y, size, angle=0):
+    def __init__(self, ID, x, y, size, patch, angle=0, interval = None):
         self.id = ID
 
         # cars's current coordinates and angle
@@ -73,16 +72,17 @@ class Car:
         # car's current size
         self.size = size
 
-        self.patch = None
-
         # car's velocity in units per second
         self.velocity = 0
+
+        # car's patch for drawing ot on plot
+        self.patch = patch
 
         # car's current state
         self.state = None
 
         # car's waiting time
-        self.interval = None
+        self.interval = interval
 
     # checks if you can change states
     # you change from stop to anything and from anything to stop
@@ -119,8 +119,12 @@ class Car:
             return
         self.interval -= 1
 
+    # apply changes for the car's patch for redrawing
+    def draw(self):
+        self.patch.set_xy(calcTriangle(self.angle, self.size, self.x, self.y))
+
     # rotate the car
-    def rotate(self, angle: float):
+    def rotate(self, angle):
         if self.stateChange(self.rotate) != True:
             return
         self.state = self.rotate
@@ -299,17 +303,44 @@ class Car:
     def stop(self):
         self.state = self.stop
 
+
 # serialize the cars to json format for sending on the network
 
 
 def carToJson(car):
     return bytes(json.dumps({"id": car.id,
+                             "state": "None" if car.state == None else
+                                      "stop" if car.state == car.stop else
+                                      "wait" if car.state == car.wait else
+                                      "rotate" if car.state == car.rotate else
+                                      "move" if car.state == car.move else
+                                      "move_xy" if car.state == car.move_xy else
+                                      "move_rad" if car.state == car.move_rad else None
+                             ,
                              "pos": {"x": car.x,
                                      "y": car.y,
                                      "angle": car.angle},
-                             "size": car.size}, indent=4, sort_keys=False), "utf-8")
+                             "size": car.size,
+                             "interval": car.interval},
+                             indent=4, sort_keys=False), "utf-8")
 
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], data["pos"]["angle"])
+    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"], interval = data["interval"])
+    if data["state"] == "None":
+        c.state == None
+    elif data["state"] == "stop":
+        c.state = c.stop
+    elif data["state"] == "wait":
+        c.state = c.wait
+    elif data["state"] == "rotate":
+        c.state = c.rotate
+    elif data["state"] == "move":
+        c.state = c.move
+    elif data["state"] == "move_xy":
+        c.state = c.move_xy
+    elif data["state"] == "move_rad":
+        c.state = c.move_rad
+    return c
+    

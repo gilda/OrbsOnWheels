@@ -7,6 +7,22 @@ import threading
 # initiate this module's game object
 game = None
 lock = threading.Lock()
+FPS = 10
+
+SEND_COMMAND = False
+
+cmd0 = ""
+cmd1 = ""
+cmd2 = ""
+
+cmd0Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30"]
+cmd0Index = 0
+
+cmd1Input = ["WAIT 100", "ROT 30", "MOVXY 0.5 0.3", "WAIT 30", "ROT 180"]
+cmd1Index = 0
+
+cmd2Input = ["RAD 0.2 -90", "MOVXY 0.8 0.6", "WAIT 30", "ROT 180"]
+cmd2Index = 0
 
 
 def main():
@@ -44,11 +60,59 @@ class Game:
         # TODO check to finish game or restart
 
     # update the car after it posted an update request
-    def updateCar(self, ID, data):
-        # TODO send back a command
-        print("updated car " + str(ID) + "'s coordinates!")
-        # return "ROT 30"
-        return "updated"
+    def updateCar(self, ID, data, USE_NET = False):
+        #print("updated car " + str(ID) + "'s coordinates!")        
+        if USE_NET:
+            # TODO send car's data and get back a command
+            pass
+        else:
+            # use pre defined commands to run
+            global cmd0
+            global cmd1
+            global cmd2
+
+            global cmd0Index
+            global cmd0Input
+            global cmd1Index
+            global cmd1Input
+            global cmd2Index
+            global cmd2Input
+
+            if ID == 0:
+                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
+                    if cmd0Index < len(cmd0Input) - 1:
+                        cmd0 = cmd0Input[cmd0Index]
+                        cmd0Index += 1
+                    return cmd0
+                else:
+                    return cmd0
+            
+            if ID == 1:
+                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
+                    if cmd1Index < len(cmd1Input) - 1:
+                        cmd1 = cmd1Input[cmd1Index]
+                        cmd1Index += 1
+                    return cmd1
+                else:
+                    return cmd1
+
+            if ID == 2:
+                if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
+                    if cmd2Index < len(cmd2Input) - 1:
+                        cmd2 = cmd2Input[cmd2Index]
+                        cmd2Index += 1
+                    return cmd2
+                else:
+                    return cmd2
+            return ""
+
+    # return the car with the specified ID
+    def getCarById(self, ID):
+        for c in game.cars:
+            if c.id == ID:
+                return c
+        return None
+>>>>>>> master
 
 
 class Server(BaseHTTPRequestHandler):
@@ -61,8 +125,7 @@ class Server(BaseHTTPRequestHandler):
         global cars
         global game
         # print all parameters
-        print("GET", self.path)
-        # print(self.headers)
+        #print("GET", self.path)
 
         # print all cars in json format
         if self.path == "/":
@@ -97,24 +160,35 @@ class Server(BaseHTTPRequestHandler):
         global cars
         global game
 
-        print("POST", self.path)
+        #print("POST", self.path)
         # split current path for easy processing
         path = self.path.split("/")
 
         # update all information about the car
         if path[2] == "update":
             data = self.rfile.read(int(self.headers["Content-length"]))
-
-            # calculate response for car
-            resp = game.updateCar(path[1], data)
-
             lock.acquire()
+            
             # update car in game.cars list and update the patch for simulation
             game.cars[int(path[1])] = jsonToCar(data)
             game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x,
                                                                      game.cars[int(path[1])].y),
+<<<<<<< HEAD
                                                         closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])
+=======
+                                                        closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])         
+            
+>>>>>>> master
             game.cars[int(path[1])].draw()
+            if game.cars[int(path[1])] != 0 and SEND_COMMAND:
+                resp = game.updateCar(int(path[1]), data)
+            else:
+                game.cars[int(path[1])] = jsonToCar(data)
+                game.cars[int(path[1])].patch = plt.Polygon(calcTriangle(game.cars[int(path[1])].angle, 1 / 20, game.cars[int(path[1])].x,
+                                                                     game.cars[int(path[1])].y),
+                                                        closed=True, facecolor=["red", "green", "blue"][game.cars[int(path[1])].id])
+                game.cars[int(path[1])].draw()
+                resp = "CONT"
             # update the game phase
             game.updateGamePhase()
             lock.release()
