@@ -63,6 +63,9 @@ class Game:
         #print("updated car " + str(ID) + "'s coordinates!")        
         if USE_NET:
             # TODO send car's data and get back a command
+            # use lock.acquire(blocking = False) to see if would block, then lock.release()
+            # potentialy use a function to get some data from orbs sdk as a new thread
+            # and until the response didn't become something else than None return from updateCar WAIT 1
             pass
         else:
             # use pre defined commands to run
