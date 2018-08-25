@@ -1,12 +1,13 @@
 import time
 import math
 import json
+from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+
 
 # angle to radians
 ANGLE_TO_RAD = math.pi / 180
 # radians to angle
 RAD_TO_ANGLE = 180 / math.pi
-
 # motor's 100 percent throtle time to revolve around itself once [s]
 SPIN_TIME = 0.011
 # wheel's one rotation length [cm]
@@ -14,7 +15,7 @@ WHEEL_LENGTH = 20
 # turning radius [cm]  (car width / 2, because we are using tank drive system)
 TURNING_RADIUS = 4.5
 # angular velocity of the car [angle/s]
-ANGULAR_VELOCITY = 5
+ANGULAR_VELOCITY = 10
 
 
 def mapFromTo(x, a, b, c, d):
@@ -41,8 +42,7 @@ class Car:
         # car's current velocity
         self.velocity = 1
 
-        if self.USE_MOTOR:
-            from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+        if USE_MOTOR:
             # car's motors used to control it
             self.rMotor = mh.getMotor(rMotor)
             self.lMotor = mh.getMotor(lMotor)
@@ -93,10 +93,35 @@ class Car:
         # make sure angle is int rangeof full circle
         angle = angle % 360
         # calculate weather to go right or left and how much
-        anglediff = (angle-self.angle+180) % 360 + 180
+        anglediff = (angle-self.angle+180) % 360 - 180
 
         if self.angle != angle:
-            pass
+            if anglediff > 0:
+                # make sure not to overshoot
+                if anglediff < ANGULAR_VELOCITY:
+                    self.angle = angle
+                    self.stop()
+                else:
+                    # change angle of car
+                    self.angle = (self.angle + ANGULAR_VELOCITY) % 360
+
+                    # run motors
+                    self.rMotor.run(Adafruit_MotorHAT.FORWARD)
+                    self.lMotor.run(Adafruit_MotorHAT.BACKWARD)
+                    time.sleep(ANGULAR_VELOCITY * SPIN_TIME)
+            else:
+                # make sure not to overshoot
+                if anglediff > -ANGULAR_VELOCITY:
+                    self.angle = angle
+                    self.stop()
+                else:
+                    # change the angle of the car
+                    self.angle = (self.angle - ANGULAR_VELOCITY) % 360
+
+                    # run motors
+                    self.rMotor.run(Adafruit_MotorHAT.BACKWARD)
+                    self.lMotor.run(Adafruit_MotorHAT.FORWARD)
+                    time.sleep(ANGULAR_VELOCITY * SPIN_TIME)
         else:
             # stop when desired angle was reached
             self.stop()
@@ -106,8 +131,9 @@ class Car:
     def setVelocity(self, v):
         self.velocity = v
         if self.USE_MOTOR:
-            self.rMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
-            self.lMotor.setSpeed(int(mapFromTo(v, -100, 100, -1, 1) * 255))
+            v = abs(v)
+            self.rMotor.setSpeed(int(mapFromTo(v, 0, 100, 0, 255)))
+            self.lMotor.setSpeed(int(mapFromTo(v, 0, 100, 0, 255)))
 
     # TODO implement this
     def move(self):
@@ -121,11 +147,8 @@ class Car:
                 self.rMotor.run(Adafruit_MotorHAT.FORWARD)
                 self.lMotor.run(Adafruit_MotorHAT.FORWARD)
 
-            print(WHEEL_LENGTH * SPIN_TIME *
-                  mapFromTo(self.velocity, -100, 100, 0, 1))
             # wait for correct amount of rotations of the motors
-            time.sleep(WHEEL_LENGTH * SPIN_TIME *
-                       mapFromTo(self.velocity, -100, 100, 0, 1))
+            time.sleep(WHEEL_LENGTH * SPIN_TIME)
             self.stop()
 
         elif self.velocity < 0:
@@ -139,11 +162,11 @@ class Car:
                 self.lMotor.run(Adafruit_MotorHAT.BACKWARD)
 
             # wait for correct amount of rotations of the motor
-            time.sleep((self.velocity / WHEEL_LENGTH) * SPIN_TIME)
+            time.sleep(WHEEL_LENGTH * SPIN_TIME)
             self.stop()
 
     # TODO implement this
-    # move the car to some desired x y position [cm]
+    # move the car to some desired x and y position
     def move_xy(self, x, y):
         pass
 
