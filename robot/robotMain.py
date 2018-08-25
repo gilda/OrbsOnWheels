@@ -2,6 +2,7 @@ from robotCar import *
 import robotClient
 import time
 import threading
+import atexit
 
 # TODO code Architecture:
 #      main calls as a thread the networking infinite loop:
@@ -27,8 +28,9 @@ def main():
     atexit.register(car1.stop)
     car1.setVelocity(50)
     
+    print(10 * car1.velocity)
     while car1.state != car1.stop: 
-        car1.move_xy(10 * car1.velocity, 10 * car1.velocity)
+        car1.move_rad(10 * car1.velocity, 90)
         print("angle", car1.angle, ", x", car1.x, ", y", car1.y)
 
     car1.stop()

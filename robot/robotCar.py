@@ -167,7 +167,6 @@ class Car:
             time.sleep(WHEEL_LENGTH * SPIN_TIME)
             self.stop()
 
-    # TODO implement this
     # move the car to some desired x and y position
     def move_xy(self, x, y):
         # state cannot change
@@ -237,10 +236,69 @@ class Car:
             self.move()
             self.state = self.move_xy
 
-    # TODO implement this
+    # TODO implement this with a set of points and mov_xy? not sure but this way less noise
     # move the car in some rasius until some angle was achieved
     def move_rad(self, rad, angle):
-        pass
+        # state cannnot change
+        if not self.stateChange(self.move_rad):
+            return
+        self.state = self.move_rad
+
+        # avoid division by zero
+        angle = 360 if angle == 0 else angle
+        anglediff = (angle -self.angle+180) % 360 - 180
+
+        # finished rotating
+        if anglediff == 0:
+            self.stop()
+            return
+
+        # remember last velocity
+        pVelocity = self.velocity
+
+        # number of iterations to complete an arch
+        numIterAngle = angle / ANGULAR_VELOCITY
+        # velocity needed to complete all the distance according to maximum angular velocity
+        numIterMove = (rad * angle * ANGLE_TO_RAD) / numIterAngle
+
+        # make sure the velociry of the car doesn't exceed it's limit
+        if pVelocity < numIterMove:
+            # number of iterations for the maximum value of velocity
+            numIterMove = (rad * angle * ANGLE_TO_RAD) / pVelocity
+            # number of angles to turn to complete an arch
+            numIterAngle = angle / numIterMove
+
+        self.state = self.stop
+        # choose direction to rotate
+        if anglediff >= 0:
+            # jump to angle if needed and check overshooting
+            if anglediff < numIterAngle:
+                self.angle = angle
+            else:
+                self.rotate(self.angle + numIterAngle)
+        else:
+            if abs(anglediff) < numIterAngle:
+                self.angle = angle % 360
+            else:
+                self.rotate(self.angle - numIterAngle)
+
+        self.state = self.stop
+        # move according to velocity
+        self.setVelocity(pVelocity if numIterMove == (rad * angle * ANGLE_TO_RAD) / pVelocity else numIterMove)
+        self.move()
+        #reset back velocity to previous one
+        self.setVelocity(pVelocity)
+
+        anglediff = (angle -self.angle) % 360 - 180
+
+        # return if desired angle was reached
+        if anglediff == 0:
+            # finished
+            self.stop()
+        else:
+            # not finished
+            self.state = self.move_rad
+            return
 
     # indicate that the car is now stopping and stop it physically
     def stop(self):
@@ -253,10 +311,16 @@ class Car:
             self.lMotor.run(Adafruit_MotorHAT.RELEASE)
 
 # serialize the cars to json format for sending on the network
-
-
 def carToJson(car):
     return bytes(json.dumps({"id": car.id,
+                             "state": "None" if car.state == None else
+                                      "stop" if car.state == car.stop else
+                                      "wait" if car.state == car.wait else
+                                      "rotate" if car.state == car.rotate else
+                                      "move" if car.state == car.move else
+                                      "move_xy" if car.state == car.move_xy else
+                                      "move_rad" if car.state == car.move_rad else None
+                             ,
                              "pos": {"x": car.x,
                                      "y": car.y,
                                      "angle": car.angle},
@@ -265,4 +329,20 @@ def carToJson(car):
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-    return Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle=data["pos"]["angle"])
+    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle=data["pos"]["angle"])
+    if data["state"] == "None":
+        c.state = None
+    elif data["state"] = "stop":
+        c.state = c.stop
+    elif data["state"] == "wait":
+        c.state = c.wait
+    elif data["state"] == "rotate":
+        c.state = c.rotate
+    elif data["state"] == "move":
+        c.state = c.move
+    elif data["state"] == "move_xy":
+        c.state = c.move_xy
+    elif data["state"] == "move_rad":
+        c.state = c.move_rad
+    return c
+
