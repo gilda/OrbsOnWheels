@@ -83,7 +83,6 @@ class Car:
             return
         self.interval -= 1
 
-    # TODO implement this
     # rotate the car to some desired angle
     def rotate(self, angle):
         if self.stateChange(self.rotate) != True:
@@ -126,7 +125,6 @@ class Car:
             # stop when desired angle was reached
             self.stop()
 
-    # TODO implement this
     # set the car's current velocity
     def setVelocity(self, v):
         self.velocity = v
@@ -135,8 +133,12 @@ class Car:
             self.rMotor.setSpeed(int(mapFromTo(v, 0, 100, 0, 255)))
             self.lMotor.setSpeed(int(mapFromTo(v, 0, 100, 0, 255)))
 
-    # TODO implement this
+    # move the car one velocity unit
     def move(self):
+        if self.stateChange(self.move) != True:
+            return
+        self.state = self.move
+
         if self.velocity > 0:
             # add values to x and y
             self.x += self.velocity * math.cos(self.angle * ANGLE_TO_RAD)
@@ -168,7 +170,72 @@ class Car:
     # TODO implement this
     # move the car to some desired x and y position
     def move_xy(self, x, y):
-        pass
+        # state cannot change
+        if self.stateChange(self.move_xy) != True:
+            return
+
+        # reached target
+        if self.x == x and self.y == y:
+            self.stop()
+            return
+
+        # check for straight lines of driving along the axes
+        if (self.x - x == 0 or self.y - y == 0) and self.x > x:
+            angle = 180
+        elif (self.x - x == 0 or self.y - y == 0) and self.x < x:
+            angle = 0
+        elif (self.x - x == 0 or self.y - y == 0) and self.y > y:
+            angle = 270
+        elif (self.x - x == 0 or self.y - y == 0) and self.y < y:
+            angle = 90
+        else:
+            # calculate angle you should drive to get there the fastest
+            angle = math.atan((y - self.y) / (x - self.x)) * RAD_TO_ANGLE
+            if self.x > x:
+                # if angle should be 90 < angle < 270
+                angle = (angle - 180) % 360
+
+        angle = angle % 360
+        # rotate the correct amount to  face the roght direction
+        self.stop()
+        self.rotate(angle)
+        
+        # check overshhoting
+        overx = (self.x + self.velocity * math.cos(self.angle * ANGLE_TO_RAD)) > x
+        underx = (self.x + self.velocity * math.cos(self.angle * ANGLE_TO_RAD)) < x
+        overy = (self.y + self.velocity * math.sin(self.angle * ANGLE_TO_RAD)) > y
+        undery = (self.y + self.velocity * math.sin(self.angle * ANGLE_TO_RAD)) < y
+
+        # check for overshooting due to high velocity
+        if self.x == x and (self.angle == 90 or self.angle == 270):
+            if self.angle == 90 and self.y + self.velocity > y:
+                self.y = y
+                self.stop()
+                return
+            elif self.angle == 270 and self.y - self.velocity < y:
+                self.y = y
+                self.stop()
+                return
+
+        # check for overshooting on straight lines on the x axis
+        if self.y == y and (self.angle == 0 or self.angle == 180):
+            if self.angle == 0 and self.x + self.velocity > x:
+                self.x = x
+                self.stop()
+                return
+            elif self.angle == 180 and self.x - self.velocity < x:
+                self.x = x
+                self.stop()
+                return
+        
+        # check overshooting on both axes if not on straight line
+        if (angle < 90 and overx and overy) or (angle > 90 and angle < 180 and underx and overy) or (angle < 270 and angle > 180 and underx and undery) or (angle < 360 and angle > 270 and overx and undery):
+            self.x = x
+            self.y = y
+            self.stop()
+        else:
+            self.move()
+            self.state = self.move_xy
 
     # TODO implement this
     # move the car in some rasius until some angle was achieved

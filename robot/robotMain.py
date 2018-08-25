@@ -24,11 +24,12 @@ def main():
 
     # create the car
     car1 = Car(0, 0.1, mh if USE_MOTOR else None, 3, 4, USE_MOTOR)
-    car1.setVelocity(-50)
+    atexit.register(car1.stop)
+    car1.setVelocity(50)
     
-    for i in range(10):
-        car1.rotate(-90)
-        print(car1.angle)
+    while car1.state != car1.stop: 
+        car1.move_xy(10 * car1.velocity, 10 * car1.velocity)
+        print("angle", car1.angle, ", x", car1.x, ", y", car1.y)
 
     car1.stop()
 
