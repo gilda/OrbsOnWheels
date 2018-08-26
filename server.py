@@ -4,6 +4,9 @@ import time
 import matplotlib.pyplot as plt
 import threading
 
+HOST = "127.0.0.1"
+PORT = 4590
+
 # initiate this module's game object
 game = None
 lock = threading.Lock()
@@ -31,7 +34,7 @@ def main():
     game = Game(3, [])
 
     # start http server and serve
-    httpd = HTTPServer(("127.0.0.1", 4590), Server)
+    httpd = HTTPServer((HOST, PORT), Server)
     httpd.serve_forever()
 
 
