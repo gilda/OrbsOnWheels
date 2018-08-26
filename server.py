@@ -24,6 +24,7 @@ cmd1Index = 0
 cmd2Input = ["RAD 0.2 -90", "MOVXY 0.8 0.6", "WAIT 30", "ROT 180"]
 cmd2Index = 0
 
+
 def main():
     # construct game
     global game
@@ -43,7 +44,7 @@ class Game:
         self.ready = []
 
     # calculate the game phase and update it
-    def updateGamePhase(self, ID = None):
+    def updateGamePhase(self, ID=None):
         # update game state when an "update" message was recieved
         if ID == None and 0 in self.cars:
             return
@@ -57,15 +58,13 @@ class Game:
             self.state = "START"
 
         # TODO check to finish game or restart
+        # wether using ORBS or not
 
     # update the car after it posted an update request
     def updateCar(self, ID, data, USE_NET = False):
         #print("updated car " + str(ID) + "'s coordinates!")        
         if USE_NET:
-            # TODO send car's data and get back a command
-            # use lock.acquire(blocking = False) to see if would block, then lock.release()
-            # potentialy use a function to get some data from orbs sdk as a new thread
-            # and until the response didn't become something else than None return from updateCar WAIT 1
+            # TODO send car's data and get back a command using ORBS
             pass
         else:
             # use pre defined commands to run

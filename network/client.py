@@ -31,7 +31,6 @@ class Client():
         return response
 
 USE_SERVER_COMMANDS = False
-
 def main():
 
     cmd0 = ""
@@ -44,19 +43,29 @@ def main():
     cmd1Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30"]
     cmd1Index = 0
 
-    cmd2Input = ["RAD 0.2 -90", "MOVXY 0.8 0.6", "WAIT 30", "ROT 180"]
-    cmd2Index = 0
+
+def main():
+    global cmd0
+    global cmd1
+    global cmd1
+
+    global cmd0Index
+    global cmd0Input
+    global cmd1Index
+    global cmd1Input
+    global cmd2Index
+    global cmd2Input
 
     car0 = Car(0, 0.5, 0.5, 0.1, None)
     car0.setVelocity(0.005)
-    
+
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car0.id)+"/phase")
     cmd0 = connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
 
     car1 = Car(1, 0.4, 0.4, 0.1, None)
     car1.setVelocity(0.005)
-    
+
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car1.id)+"/phase")
     cmd1 = connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
@@ -171,8 +180,9 @@ def main():
                 else:
                     print("No such command")
 
+            # decrease car wait time interval
             car0.decInterval()
-            
+                        
             # change and ask for new state only if the current state is stop
             # meaning that all current commands were accomplished
             if car1.state == None or car1.state == car1.stop:
