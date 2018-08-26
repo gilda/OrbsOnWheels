@@ -33,20 +33,18 @@ class Client():
         print(response)
         return response
 
-# TODO implement recieve command
-
-
+# TODO implement recieve command using ORBS
+# execute using a new thread and thread.start() doesn't have to include a variable
+# make sure to have always a way to stop the car.
 def recieveCommand():
     pass
 
-
+# send a phase command to the server. like a stay alive message
 def sendPhase(car):
     connection = Client(HTTPConnection(HOST, PORT))
     connection.sendGET("/"+str(car.id)+"/phase")
 
 # send the car's coordinates and ID to the server
-
-
 def sendUpdate(car):
     connection = Client(HTTPConnection(HOST, PORT))
     connection.sendGET("/"+str(car.id)+"/phase")

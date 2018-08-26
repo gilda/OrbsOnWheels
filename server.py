@@ -58,12 +58,13 @@ class Game:
             self.state = "START"
 
         # TODO check to finish game or restart
+        # wether using ORBS or not
 
     # update the car after it posted an update request
     def updateCar(self, ID, data, USE_NET = False):
         #print("updated car " + str(ID) + "'s coordinates!")        
         if USE_NET:
-            # TODO send car's data and get back a command
+            # TODO send car's data and get back a command using ORBS
             pass
         else:
             # use pre defined commands to run

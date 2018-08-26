@@ -42,7 +42,7 @@ class Car:
         # car's current velocity
         self.velocity = 1
 
-        if USE_MOTOR:
+        if self.USE_MOTOR:
             # car's motors used to control it
             self.rMotor = mh.getMotor(rMotor)
             self.lMotor = mh.getMotor(lMotor)
@@ -104,10 +104,12 @@ class Car:
                     # change angle of car
                     self.angle = (self.angle + ANGULAR_VELOCITY) % 360
 
-                    # run motors
-                    self.rMotor.run(Adafruit_MotorHAT.FORWARD)
-                    self.lMotor.run(Adafruit_MotorHAT.BACKWARD)
-                    time.sleep(ANGULAR_VELOCITY * SPIN_TIME)
+                    # only if using the motors of the rpi
+                    if self.USE_MOTOR:
+                        # run motors
+                        self.rMotor.run(Adafruit_MotorHAT.FORWARD)
+                        self.lMotor.run(Adafruit_MotorHAT.BACKWARD)
+                        time.sleep(ANGULAR_VELOCITY * SPIN_TIME)
             else:
                 # make sure not to overshoot
                 if anglediff > -ANGULAR_VELOCITY:
@@ -117,10 +119,11 @@ class Car:
                     # change the angle of the car
                     self.angle = (self.angle - ANGULAR_VELOCITY) % 360
 
-                    # run motors
-                    self.rMotor.run(Adafruit_MotorHAT.BACKWARD)
-                    self.lMotor.run(Adafruit_MotorHAT.FORWARD)
-                    time.sleep(ANGULAR_VELOCITY * SPIN_TIME)
+                    if self.USE_MOTOR:
+                        # run motors
+                        self.rMotor.run(Adafruit_MotorHAT.BACKWARD)
+                        self.lMotor.run(Adafruit_MotorHAT.FORWARD)
+                        time.sleep(ANGULAR_VELOCITY * SPIN_TIME)
         else:
             # stop when desired angle was reached
             self.stop()
