@@ -119,6 +119,36 @@ class Car:
             return
         self.interval -= 1
 
+    # parse a command and execute it with a given command
+    # should be run iteratively
+    def parseCommand(self, cmd):
+        if self.state == None or self.state == self.stop:
+            if cmd[0] == "ROT":
+                self.rotate(int(cmd[1]))
+            elif cmd[0] == "MOV":
+                self.move()
+            elif cmd[0] == "MOVXY":
+                self.move_xy(float(cmd[1]), float(cmd[2]))
+            elif cmd[0] == "RAD":
+                self.move_rad(float(cmd[1]), float(cmd[2]))
+            elif cmd[0] == "WAIT":
+                self.wait(int(cmd[1]))
+            else:
+                print("No such command")
+        else:
+            if cmd[0] == "ROT":
+                self.rotate(int(cmd[1]))
+            elif cmd[0] == "MOV":
+                self.move()
+            elif cmd[0] == "MOVXY":
+                self.move_xy(float(cmd[1]), float(cmd[2]))
+            elif cmd[0] == "RAD":
+                self.move_rad(float(cmd[1]), float(cmd[2]))
+            elif cmd[0] == "WAIT":
+                self.decInterval()
+            else:
+                print("No such command")
+
     # apply changes for the car's patch for redrawing
     def draw(self):
         self.patch.set_xy(calcTriangle(self.angle, self.size, self.x, self.y))

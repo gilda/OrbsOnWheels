@@ -81,32 +81,8 @@ def iterate(i, *fargs):
                 cmd1 = cmd1Input[cmd1Index]
                 cmd1 = cmd1.split(" ")
                 cmd1Index += 1
-            if cmd1[0] == "ROT":
-                car1.rotate(int(cmd1[1]))
-            elif cmd1[0] == "MOV":
-                car1.move()
-            elif cmd1[0] == "MOVXY":
-                car1.move_xy(float(cmd1[1]), float(cmd1[2]))
-            elif cmd1[0] == "RAD":
-                car1.move_rad(float(cmd1[1]), float(cmd1[2]))
-            elif cmd1[0] == "WAIT":
-                car1.wait(int(cmd1[1]))
-            else:
-                print("No such command")
-        else:
-            # continue with current command
-            if cmd1[0] == "ROT":
-                car1.rotate(int(cmd1[1]))
-            elif cmd1[0] == "MOV":
-                car1.move()
-            elif cmd1[0] == "MOVXY":
-                car1.move_xy(float(cmd1[1]), float(cmd1[2]))
-            elif cmd1[0] == "RAD":
-                car1.move_rad(float(cmd1[1]), float(cmd1[2]))
-            elif cmd1[0] == "WAIT":
-                car1.decInterval()
-            else:
-                print("No such command")
+        # execute current comman
+        car1.parseCommand(cmd1)
 
         # draw the car after all changes were made
         car1.draw()
@@ -123,32 +99,7 @@ def iterate(i, *fargs):
                 cmd2 = cmd2Input[cmd2Index]
                 cmd2Index += 1
                 cmd2 = cmd2.split(" ")
-            if cmd2[0] == "ROT":
-                car2.rotate(int(cmd2[1]))
-            elif cmd2[0] == "MOV":
-                car2.move()
-            elif cmd2[0] == "MOVXY":
-                car2.move_xy(float(cmd2[1]), float(cmd2[2]))
-            elif cmd2[0] == "RAD":
-                car2.move_rad(float(cmd2[1]), float(cmd2[2]))
-            elif cmd2[0] == "WAIT":
-                car2.wait(int(cmd2[1]))
-            else:
-                print("No such command")
-        else:
-            # continue with current command
-            if cmd2[0] == "ROT":
-                car2.rotate(int(cmd2[1]))
-            elif cmd2[0] == "MOV":
-                car2.move()
-            elif cmd2[0] == "MOVXY":
-                car2.move_xy(float(cmd2[1]), float(cmd2[2]))
-            elif cmd2[0] == "RAD":
-                car2.move_rad(float(cmd2[1]), float(cmd2[2]))
-            elif cmd2[0] == "WAIT":
-                car2.decInterval()
-            else:
-                print("No such command")
+        car2.parseCommand(cmd2)
         car2.draw()
 
         # set the second cars velocity
@@ -163,33 +114,8 @@ def iterate(i, *fargs):
                 cmd3 = cmd3Input[cmd3Index]
                 cmd3Index += 1
                 cmd3 = cmd3.split(" ")
-            if cmd3[0] == "ROT":
-                car3.rotate(int(cmd3[1]))
-            elif cmd3[0] == "MOV":
-                car3.move()
-            elif cmd3[0] == "MOVXY":
-                car3.move_xy(float(cmd3[1]), float(cmd3[2]))
-            elif cmd3[0] == "RAD":
-                car3.move_rad(float(cmd3[1]), float(cmd3[2]))
-            elif cmd3[0] == "WAIT":
-                car3.wait(int(cmd3[1]))
-            else:
-                print("No such command")
-        else:
-            # continue with current command
-            if cmd3[0] == "ROT":
-                car3.rotate(int(cmd3[1]))
-            elif cmd3[0] == "MOV":
-                car3.move()
-            elif cmd3[0] == "MOVXY":
-                car3.move_xy(float(cmd3[1]), float(cmd3[2]))
-            elif cmd3[0] == "RAD":
-                car3.move_rad(float(cmd3[1]), float(cmd3[2]))
-            elif cmd3[0] == "WAIT":
-                car3.decInterval()
-            else:
-                print("No such command")
 
+        car3.parseCommand(cmd3)
         car3.draw()
 
         # return cars for drawing

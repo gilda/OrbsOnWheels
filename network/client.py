@@ -34,17 +34,15 @@ class Client():
 USE_SERVER_COMMANDS = False
 
 
-def main():
+cmd0 = ""
+cmd1 = ""
+cmd2 = ""
 
-    cmd0 = ""
-    cmd1 = ""
-    cmd2 = ""
+cmd0Input = ["WAIT 100", "ROT 30", "MOVXY 0.5 0.3", "WAIT 30", "ROT 180"]
+cmd0Index = 0
 
-    cmd0Input = ["WAIT 100", "ROT 30", "MOVXY 0.5 0.3", "WAIT 30", "ROT 180"]
-    cmd0Index = 0
-
-    cmd1Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30"]
-    cmd1Index = 0
+cmd1Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30"]
+cmd1Index = 0
 
 
 def main():
@@ -160,33 +158,8 @@ def main():
                     cmd0 = cmd0Input[cmd0Index]
                     cmd0Index += 1
                     cmd0 = cmd0.split(" ")
-                if cmd0[0] == "ROT":
-                    car0.rotate(int(cmd0[1]))
-                elif cmd0[0] == "MOV":
-                    car0.move()
-                elif cmd0[0] == "MOVXY":
-                    car0.move_xy(float(cmd0[1]), float(cmd0[2]))
-                elif cmd0[0] == "RAD":
-                    car0.move_rad(float(cmd0[1]), float(cmd0[2]))
-                elif cmd0[0] == "WAIT":
-                    car0.wait(int(cmd0[1]))
-                else:
-                    print("No such command")
-            else:
-                # continue with current command
-                if cmd0[0] == "ROT":
-                    car0.rotate(int(cmd0[1]))
-                elif cmd0[0] == "MOV":
-                    car0.move()
-                elif cmd0[0] == "MOVXY":
-                    car0.move_xy(float(cmd0[1]), float(cmd0[2]))
-                elif cmd0[0] == "RAD":
-                    car0.move_rad(float(cmd0[1]), float(cmd0[2]))
-                elif cmd0[0] == "WAIT":
-                    car0.decInterval()
-                else:
-                    print("No such command")
 
+            car0.parseCommand(cmd0)
             # decrease car wait time interval
             car0.decInterval()
 
@@ -197,33 +170,8 @@ def main():
                     cmd1 = cmd1Input[cmd1Index]
                     cmd1Index += 1
                     cmd1 = cmd1.split(" ")
-                if cmd1[0] == "ROT":
-                    car1.rotate(int(cmd1[1]))
-                elif cmd1[0] == "MOV":
-                    car1.move()
-                elif cmd1[0] == "MOVXY":
-                    car1.move_xy(float(cmd1[1]), float(cmd1[2]))
-                elif cmd1[0] == "RAD":
-                    car1.move_rad(float(cmd1[1]), float(cmd1[2]))
-                elif cmd1[0] == "WAIT":
-                    car1.wait(int(cmd1[1]))
-                else:
-                    print("No such command")
-            else:
-                # continue with current command
-                if cmd1[0] == "ROT":
-                    car1.rotate(int(cmd1[1]))
-                elif cmd1[0] == "MOV":
-                    car1.move()
-                elif cmd1[0] == "MOVXY":
-                    car1.move_xy(float(cmd1[1]), float(cmd1[2]))
-                elif cmd1[0] == "RAD":
-                    car1.move_rad(float(cmd1[1]), float(cmd1[2]))
-                elif cmd1[0] == "WAIT":
-                    car1.decInterval()
-                else:
-                    print("No such command")
 
+            car1.parseCommand(cmd1)
             # draw the car after all changes were made
             car1.decInterval()
 
@@ -234,33 +182,8 @@ def main():
                     cmd2 = cmd2Input[cmd2Index]
                     cmd2Index += 1
                     cmd2 = cmd2.split(" ")
-                if cmd2[0] == "ROT":
-                    car2.rotate(int(cmd2[1]))
-                elif cmd2[0] == "MOV":
-                    car2.move()
-                elif cmd2[0] == "MOVXY":
-                    car2.move_xy(float(cmd2[1]), float(cmd2[2]))
-                elif cmd2[0] == "RAD":
-                    car2.move_rad(float(cmd2[1]), float(cmd2[2]))
-                elif cmd2[0] == "WAIT":
-                    car2.wait(int(cmd2[1]))
-                else:
-                    print("No such command")
-            else:
-                # continue with current command
-                if cmd2[0] == "ROT":
-                    car2.rotate(int(cmd2[1]))
-                elif cmd2[0] == "MOV":
-                    car2.move()
-                elif cmd2[0] == "MOVXY":
-                    car2.move_xy(float(cmd2[1]), float(cmd2[2]))
-                elif cmd2[0] == "RAD":
-                    car2.move_rad(float(cmd2[1]), float(cmd2[2]))
-                elif cmd2[0] == "WAIT":
-                    car2.decInterval()
-                else:
-                    print("No such command")
 
+            car2.parseCommand(cmd2)
             car2.decInterval()
 
             # send all of the cars data to the server for simulation to display
