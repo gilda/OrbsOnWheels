@@ -61,7 +61,7 @@ def calcTriangle(angle,  size, x=0, y=0):
 
 
 class Car:
-    def __init__(self, ID, x, y, size, patch, angle=0, interval = None):
+    def __init__(self, ID, x, y, size, patch, angle=0, interval=None):
         self.id = ID
 
         # cars's current coordinates and angle
@@ -315,19 +315,19 @@ def carToJson(car):
                                       "rotate" if car.state == car.rotate else
                                       "move" if car.state == car.move else
                                       "move_xy" if car.state == car.move_xy else
-                                      "move_rad" if car.state == car.move_rad else None
-                             ,
+                                      "move_rad" if car.state == car.move_rad else None,
                              "pos": {"x": car.x,
                                      "y": car.y,
                                      "angle": car.angle},
                              "size": car.size,
                              "interval": car.interval},
-                             indent=4, sort_keys=False), "utf-8")
+                            indent=4, sort_keys=False), "utf-8")
 
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle = data["pos"]["angle"], interval = data["interval"])
+    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"],
+            None, angle=data["pos"]["angle"], interval=data["interval"])
     if data["state"] == "None":
         c.state == None
     elif data["state"] == "stop":
@@ -343,4 +343,3 @@ def jsonToCar(jsonData):
     elif data["state"] == "move_rad":
         c.state = c.move_rad
     return c
-    

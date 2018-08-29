@@ -12,6 +12,7 @@ USE_SERVER = False
 if USE_MOTOR:
     from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 
+
 def main():
     if USE_MOTOR:
         # get the motor driver object
@@ -22,19 +23,20 @@ def main():
     # even if have RunTimeError still stop the motors (e-stop)
     atexit.register(car1.stop)
     car1.setVelocity(50)
-    
+
     # wether or not send the coordinates to the server and await a command
     if USE_SERVER:
         # update thread
-        updateThread = threading.Thread(target = robotClient.sendUpdate, args=(car1,))
+        updateThread = threading.Thread(
+            target=robotClient.sendUpdate, args=(car1,))
         # TODO run threads as getting commands from server
         # TODO should always have a command for stopping for e-stop
         for i in range(10):
             if i == 0:
-                runThread = threading.Thread(target = car1.rotate, args = (90, ))
+                runThread = threading.Thread(target=car1.rotate, args=(90, ))
                 runThread.start()
             else:
-                runThread = threading.Thread(target = car1.move)
+                runThread = threading.Thread(target=car1.move)
         robotClient.sendPhase(car1)
 
 

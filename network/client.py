@@ -16,7 +16,7 @@ class Client():
         # get and print response
         resp = self.conn.getresponse()
         #print(resp.status, resp.reason)
-        #print(resp.read())
+        # print(resp.read())
 
     def sendPOST(self, path, data):
         # send request
@@ -27,10 +27,13 @@ class Client():
         response = resp.read()
         #print(resp.status, resp.reason, path)
         # tell car to parse(response).execute()
-        #print(response)
+        # print(response)
         return response
 
+
 USE_SERVER_COMMANDS = False
+
+
 def main():
 
     cmd0 = ""
@@ -61,22 +64,24 @@ def main():
 
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car0.id)+"/phase")
-    cmd0 = connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
+    cmd0 = connection.sendPOST(
+        "/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
 
     car1 = Car(1, 0.4, 0.4, 0.1, None)
     car1.setVelocity(0.005)
 
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car1.id)+"/phase")
-    cmd1 = connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
+    cmd1 = connection.sendPOST(
+        "/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
 
     car2 = Car(2, 0.2, 0.6, 0.1, None)
-    car2.setVelocity(0.005)    
-    
+    car2.setVelocity(0.005)
+
     connection = Client(HTTPConnection("127.0.0.1", 4590))
     connection.sendGET("/"+str(car2.id)+"/phase")
-    cmd2 = connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
-
+    cmd2 = connection.sendPOST(
+        "/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
 
     if USE_SERVER_COMMANDS:
         input("start simulating?\n")
@@ -98,7 +103,6 @@ def main():
                 print("No such command")
             car0.decInterval()
 
-                
             if cmd1[0] == "ROT":
                 car1.rotate(int(cmd1[1]))
             elif cmd1[0] == "MOV":
@@ -133,19 +137,22 @@ def main():
             # send all of the cars data to the server for simulation to display
             connection = Client(HTTPConnection("127.0.0.1", 4590))
             connection.sendGET("/"+str(car0.id)+"/phase")
-            cmd0 = connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
+            cmd0 = connection.sendPOST(
+                "/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
 
             connection = Client(HTTPConnection("127.0.0.1", 4590))
             connection.sendGET("/"+str(car1.id)+"/phase")
-            cmd1 = connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
+            cmd1 = connection.sendPOST(
+                "/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
 
             connection = Client(HTTPConnection("127.0.0.1", 4590))
             connection.sendGET("/"+str(car2.id)+"/phase")
-            cmd2 = connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
+            cmd2 = connection.sendPOST(
+                "/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
 
             time.sleep(0.01)
     else:
-        while True:      
+        while True:
             # change and ask for new state only if the current state is stop
             # meaning that ll current commands were accomplished
             if car0.state == None or car0.state == car0.stop:
@@ -182,7 +189,7 @@ def main():
 
             # decrease car wait time interval
             car0.decInterval()
-                        
+
             # change and ask for new state only if the current state is stop
             # meaning that all current commands were accomplished
             if car1.state == None or car1.state == car1.stop:
@@ -259,17 +266,21 @@ def main():
             # send all of the cars data to the server for simulation to display
             connection = Client(HTTPConnection("127.0.0.1", 4590))
             connection.sendGET("/"+str(car0.id)+"/phase")
-            connection.sendPOST("/"+str(car0.id)+"/update", carToJson(car0)).decode("utf-8").split(" ")
+            connection.sendPOST("/"+str(car0.id)+"/update",
+                                carToJson(car0)).decode("utf-8").split(" ")
 
             connection = Client(HTTPConnection("127.0.0.1", 4590))
             connection.sendGET("/"+str(car1.id)+"/phase")
-            connection.sendPOST("/"+str(car1.id)+"/update", carToJson(car1)).decode("utf-8").split(" ")
+            connection.sendPOST("/"+str(car1.id)+"/update",
+                                carToJson(car1)).decode("utf-8").split(" ")
 
             connection = Client(HTTPConnection("127.0.0.1", 4590))
             connection.sendGET("/"+str(car2.id)+"/phase")
-            connection.sendPOST("/"+str(car2.id)+"/update", carToJson(car2)).decode("utf-8").split(" ")
+            connection.sendPOST("/"+str(car2.id)+"/update",
+                                carToJson(car2)).decode("utf-8").split(" ")
 
             time.sleep(0.01)
+
 
 if __name__ == "__main__":
     main()

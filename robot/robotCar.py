@@ -201,12 +201,16 @@ class Car:
         # rotate the correct amount to  face the roght direction
         self.stop()
         self.rotate(angle)
-        
+
         # check overshhoting
-        overx = (self.x + self.velocity * math.cos(self.angle * ANGLE_TO_RAD)) > x
-        underx = (self.x + self.velocity * math.cos(self.angle * ANGLE_TO_RAD)) < x
-        overy = (self.y + self.velocity * math.sin(self.angle * ANGLE_TO_RAD)) > y
-        undery = (self.y + self.velocity * math.sin(self.angle * ANGLE_TO_RAD)) < y
+        overx = (self.x + self.velocity *
+                 math.cos(self.angle * ANGLE_TO_RAD)) > x
+        underx = (self.x + self.velocity *
+                  math.cos(self.angle * ANGLE_TO_RAD)) < x
+        overy = (self.y + self.velocity *
+                 math.sin(self.angle * ANGLE_TO_RAD)) > y
+        undery = (self.y + self.velocity *
+                  math.sin(self.angle * ANGLE_TO_RAD)) < y
 
         # check for overshooting due to high velocity
         if self.x == x and (self.angle == 90 or self.angle == 270):
@@ -229,7 +233,7 @@ class Car:
                 self.x = x
                 self.stop()
                 return
-        
+
         # check overshooting on both axes if not on straight line
         if (angle < 90 and overx and overy) or (angle > 90 and angle < 180 and underx and overy) or (angle < 270 and angle > 180 and underx and undery) or (angle < 360 and angle > 270 and overx and undery):
             self.x = x
@@ -249,7 +253,7 @@ class Car:
 
         # avoid division by zero
         angle = 360 if angle == 0 else angle
-        anglediff = (angle -self.angle+180) % 360 - 180
+        anglediff = (angle - self.angle+180) % 360 - 180
 
         # finished rotating
         if anglediff == 0:
@@ -287,12 +291,13 @@ class Car:
 
         self.state = self.stop
         # move according to velocity
-        self.setVelocity(pVelocity if numIterMove == (rad * angle * ANGLE_TO_RAD) / pVelocity else numIterMove)
+        self.setVelocity(pVelocity if numIterMove == (
+            rad * angle * ANGLE_TO_RAD) / pVelocity else numIterMove)
         self.move()
-        #reset back velocity to previous one
+        # reset back velocity to previous one
         self.setVelocity(pVelocity)
 
-        anglediff = (angle -self.angle) % 360 - 180
+        anglediff = (angle - self.angle) % 360 - 180
 
         # return if desired angle was reached
         if anglediff == 0:
@@ -314,6 +319,8 @@ class Car:
             self.lMotor.run(Adafruit_MotorHAT.RELEASE)
 
 # serialize the cars to json format for sending on the network
+
+
 def carToJson(car):
     return bytes(json.dumps({"id": car.id,
                              "state": "None" if car.state == None else
@@ -322,8 +329,7 @@ def carToJson(car):
                                       "rotate" if car.state == car.rotate else
                                       "move" if car.state == car.move else
                                       "move_xy" if car.state == car.move_xy else
-                                      "move_rad" if car.state == car.move_rad else None
-                             ,
+                                      "move_rad" if car.state == car.move_rad else None,
                              "pos": {"x": car.x,
                                      "y": car.y,
                                      "angle": car.angle},
@@ -332,7 +338,8 @@ def carToJson(car):
 
 def jsonToCar(jsonData):
     data = json.loads(jsonData)
-    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"], data["size"], None, angle=data["pos"]["angle"])
+    c = Car(data["id"], data["pos"]["x"], data["pos"]["y"],
+            data["size"], None, angle=data["pos"]["angle"])
     if data["state"] == "None":
         c.state = None
     elif data["state"] = "stop":
@@ -348,4 +355,3 @@ def jsonToCar(jsonData):
     elif data["state"] == "move_rad":
         c.state = c.move_rad
     return c
-
