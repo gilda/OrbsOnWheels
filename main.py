@@ -10,7 +10,7 @@ from Simulation.car import *
 import server as sv
 
 # use server
-USE_SERVER = True
+USE_SERVER = False
 # window size for plotting
 WINDOW_SIZE = 1
 # frames per second
@@ -26,7 +26,7 @@ cmd3 = ""
 cmd1Input = ["WAIT 100", "ROT 30", "MOVXY 0.5 0.3", "WAIT 30", "ROT 180"]
 cmd1Index = 0
 
-cmd2Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30"]
+cmd2Input = ["ROT 30", "MOVXY 0.8 0.8", "MOVXY 0.2 0.3", "WAIT 30", "ROT 180"]
 cmd2Index = 0
 
 cmd3Input = ["RAD 0.2 -90", "MOVXY 0.8 0.6", "WAIT 30", "ROT 180"]
@@ -77,10 +77,10 @@ def iterate(i, *fargs):
         if car1.state == None or car1.state == car1.stop:
             # get new command
             #cmd1 = input("cmd1: ")
-            if cmd1Index < len(cmd1Input) - 1:
+            if cmd1Index <= len(cmd1Input) - 1:
                 cmd1 = cmd1Input[cmd1Index]
-                cmd1Index += 1
                 cmd1 = cmd1.split(" ")
+                cmd1Index += 1
             if cmd1[0] == "ROT":
                 car1.rotate(int(cmd1[1]))
             elif cmd1[0] == "MOV":
@@ -109,7 +109,6 @@ def iterate(i, *fargs):
                 print("No such command")
 
         # draw the car after all changes were made
-        car1.decInterval()
         car1.draw()
 
         # set the second cars velocity
@@ -120,7 +119,7 @@ def iterate(i, *fargs):
         if car2.state == None or car2.state == car2.stop:
             # get new command
             #cmd2 = input("cmd2: ")
-            if cmd2Index < len(cmd2Input) - 1:
+            if cmd2Index <= len(cmd2Input) - 1:
                 cmd2 = cmd2Input[cmd2Index]
                 cmd2Index += 1
                 cmd2 = cmd2.split(" ")
@@ -150,8 +149,6 @@ def iterate(i, *fargs):
                 car2.decInterval()
             else:
                 print("No such command")
-
-        car2.decInterval()
         car2.draw()
 
         # set the second cars velocity
@@ -162,7 +159,7 @@ def iterate(i, *fargs):
         if car3.state == None or car3.state == car3.stop:
             # get new command
             #cmd3 = input("cmd3: ")
-            if cmd3Index < len(cmd3Input) - 1:
+            if cmd3Index <= len(cmd3Input) - 1:
                 cmd3 = cmd3Input[cmd3Index]
                 cmd3Index += 1
                 cmd3 = cmd3.split(" ")
@@ -193,7 +190,6 @@ def iterate(i, *fargs):
             else:
                 print("No such command")
 
-        car3.decInterval()
         car3.draw()
 
         # return cars for drawing
@@ -221,9 +217,9 @@ def main(cars=[]):
         car1 = Car(0, 0.5, 0.5, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
                                                                            WINDOW_SIZE / 20), closed=True, facecolor="red"))
         car2 = Car(1, 0.4, 0.4, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
-                                                                           WINDOW_SIZE / 20), closed=True, facecolor="blue"))
-        car3 = Car(2, 0.2, 0.6, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
                                                                            WINDOW_SIZE / 20), closed=True, facecolor="green"))
+        car3 = Car(2, 0.2, 0.6, WINDOW_SIZE / 20, plt.Polygon(calcTriangle(0,
+                                                                           WINDOW_SIZE / 20), closed=True, facecolor="blue"))
         ax.add_patch(car1.patch)
         ax.add_patch(car2.patch)
         ax.add_patch(car3.patch)

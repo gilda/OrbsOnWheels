@@ -84,7 +84,7 @@ class Game:
 
             if ID == 0:
                 if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
-                    if cmd0Index < len(cmd0Input) - 1:
+                    if cmd0Index <= len(cmd0Input) - 1:
                         cmd0 = cmd0Input[cmd0Index]
                         cmd0Index += 1
                     return cmd0
@@ -93,7 +93,7 @@ class Game:
             
             if ID == 1:
                 if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
-                    if cmd1Index < len(cmd1Input) - 1:
+                    if cmd1Index <= len(cmd1Input) - 1:
                         cmd1 = cmd1Input[cmd1Index]
                         cmd1Index += 1
                     return cmd1
@@ -102,7 +102,7 @@ class Game:
 
             if ID == 2:
                 if self.getCarById(ID).state == None or self.getCarById(ID).state == self.getCarById(ID).stop or self.getCarById(ID).interval == 0:
-                    if cmd2Index < len(cmd2Input) - 1:
+                    if cmd2Index <= len(cmd2Input) - 1:
                         cmd2 = cmd2Input[cmd2Index]
                         cmd2Index += 1
                     return cmd2

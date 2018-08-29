@@ -149,7 +149,7 @@ def main():
             # change and ask for new state only if the current state is stop
             # meaning that ll current commands were accomplished
             if car0.state == None or car0.state == car0.stop:
-                if cmd0Index < len(cmd0Input) - 1:
+                if cmd0Index <= len(cmd0Input) - 1:
                     cmd0 = cmd0Input[cmd0Index]
                     cmd0Index += 1
                     cmd0 = cmd0.split(" ")
@@ -186,7 +186,7 @@ def main():
             # change and ask for new state only if the current state is stop
             # meaning that all current commands were accomplished
             if car1.state == None or car1.state == car1.stop:
-                if cmd1Index < len(cmd1Input) - 1:
+                if cmd1Index <= len(cmd1Input) - 1:
                     cmd1 = cmd1Input[cmd1Index]
                     cmd1Index += 1
                     cmd1 = cmd1.split(" ")
@@ -223,7 +223,7 @@ def main():
             # change and ask for new state only if the current state is stop
             # meaning that ll current commands were accomplished
             if car2.state == None or car2.state == car2.stop:
-                if cmd2Index < len(cmd2Input) - 1:
+                if cmd2Index <= len(cmd2Input) - 1:
                     cmd2 = cmd2Input[cmd2Index]
                     cmd2Index += 1
                     cmd2 = cmd2.split(" ")
